@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update>
+    <sys_ui_list action="DELETE" parent="" relationship="" sys_domain="global" table="x_snc_airop_check_result" version="2" view="">
+        <sys_ui_list_element action="INSERT_OR_UPDATE">
+            <average_value>false</average_value>
+            <element>number</element>
+            <list_id display_value="x_snc_airop_check_result" element="NULL" name="x_snc_airop_check_result" parent="NULL" relationship="NULL" sys_domain="global" view="Default view">82ab21eccfd1c3dc8935fb251d851c53</list_id>
+            <max_value>false</max_value>
+            <min_value>false</min_value>
+            <position>0</position>
+            <sum>false</sum>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-06-02 13:38:06</sys_created_on>
+            <sys_id>42ab21eccfd1c3dc8935fb251d851c54</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-06-02 13:38:06</sys_updated_on>
+        </sys_ui_list_element>
+        <sys_ui_list_element action="INSERT_OR_UPDATE">
+            <average_value>false</average_value>
+            <element>check_definition</element>
+            <list_id display_value="x_snc_airop_check_result" element="NULL" name="x_snc_airop_check_result" parent="NULL" relationship="NULL" sys_domain="global" view="Default view">82ab21eccfd1c3dc8935fb251d851c53</list_id>
+            <max_value>false</max_value>
+            <min_value>false</min_value>
+            <position>1</position>
+            <sum>false</sum>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-06-02 13:38:06</sys_created_on>
+            <sys_id>c6ab21eccfd1c3dc8935fb251d851c54</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-06-02 13:38:06</sys_updated_on>
+        </sys_ui_list_element>
+        <sys_ui_list_element action="INSERT_OR_UPDATE">
+            <average_value>false</average_value>
+            <element>status</element>
+            <list_id display_value="x_snc_airop_check_result" element="NULL" name="x_snc_airop_check_result" parent="NULL" relationship="NULL" sys_domain="global" view="Default view">82ab21eccfd1c3dc8935fb251d851c53</list_id>
+            <max_value>false</max_value>
+            <min_value>false</min_value>
+            <position>2</position>
+            <sum>false</sum>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-06-02 13:38:06</sys_created_on>
+            <sys_id>4eab21eccfd1c3dc8935fb251d851c54</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-06-02 13:38:06</sys_updated_on>
+        </sys_ui_list_element>
+        <sys_ui_list_element action="INSERT_OR_UPDATE">
+            <average_value>false</average_value>
+            <element>sys_created_on</element>
+            <list_id display_value="x_snc_airop_check_result" element="NULL" name="x_snc_airop_check_result" parent="NULL" relationship="NULL" sys_domain="global" view="Default view">82ab21eccfd1c3dc8935fb251d851c53</list_id>
+            <max_value>false</max_value>
+            <min_value>false</min_value>
+            <position>3</position>
+            <sum>false</sum>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-06-02 13:38:06</sys_created_on>
+            <sys_id>c2ab21eccfd1c3dc8935fb251d851c55</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-06-02 13:38:06</sys_updated_on>
+        </sys_ui_list_element>
+        <sys_ui_list action="INSERT_OR_UPDATE">
+            <average_value>false</average_value>
+            <element/>
+            <max_value>false</max_value>
+            <min_value>false</min_value>
+            <name>x_snc_airop_check_result</name>
+            <parent/>
+            <position/>
+            <relationship/>
+            <sum>false</sum>
+            <sys_class_name>sys_ui_list</sys_class_name>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-06-02 13:38:06</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>82ab21eccfd1c3dc8935fb251d851c53</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_name>x_snc_airop_check_result</sys_name>
+            <sys_package display_value="ServiceNow AI Readiness Optimization Platform" source="x_snc_airop">73e2562fcf244b908935fb251d851c78</sys_package>
+            <sys_policy/>
+            <sys_scope display_value="ServiceNow AI Readiness Optimization Platform">73e2562fcf244b908935fb251d851c78</sys_scope>
+            <sys_update_name>sys_ui_list_x_snc_airop_check_result_null</sys_update_name>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-06-02 13:38:06</sys_updated_on>
+            <sys_user/>
+            <view display_value="Default view" name="NULL">Default view</view>
+            <view_name/>
+        </sys_ui_list>
+    </sys_ui_list>
+    <sys_update_version action="INSERT_OR_UPDATE">
+        <action>DELETE</action>
+        <application display_value="ServiceNow AI Readiness Optimization Platform">73e2562fcf244b908935fb251d851c78</application>
+        <file_path/>
+        <instance_id>48bb485aebdefa90cbdefceacad0cd82</instance_id>
+        <instance_name>demoalectriallwf137518</instance_name>
+        <name>sys_ui_list_x_snc_airop_check_result_null</name>
+        <payload><![CDATA[<?xml version="1.0" encoding="UTF-8"?><record_update><sys_ui_list parent="" relationship="" sys_domain="global" table="x_snc_airop_check_result" version="2" view=""><sys_ui_list_element action="INSERT_OR_UPDATE"><average_value>false</average_value><element>number</element><list_id display_value="x_snc_airop_check_result" element="NULL" name="x_snc_airop_check_result" parent="NULL" relationship="NULL" sys_domain="global" view="Default view">82ab21eccfd1c3dc8935fb251d851c53</list_id><max_value>false</max_value><min_value>false</min_value><position>0</position><sum>false</sum><sys_created_by>admin</sys_created_by><sys_created_on>2026-06-02 13:38:06</sys_created_on><sys_id>42ab21eccfd1c3dc8935fb251d851c54</sys_id><sys_mod_count>0</sys_mod_count><sys_updated_by>admin</sys_updated_by><sys_updated_on>2026-06-02 13:38:06</sys_updated_on></sys_ui_list_element><sys_ui_list_element action="INSERT_OR_UPDATE"><average_value>false</average_value><element>check_definition</element><list_id display_value="x_snc_airop_check_result" element="NULL" name="x_snc_airop_check_result" parent="NULL" relationship="NULL" sys_domain="global" view="Default view">82ab21eccfd1c3dc8935fb251d851c53</list_id><max_value>false</max_value><min_value>false</min_value><position>1</position><sum>false</sum><sys_created_by>admin</sys_created_by><sys_created_on>2026-06-02 13:38:06</sys_created_on><sys_id>c6ab21eccfd1c3dc8935fb251d851c54</sys_id><sys_mod_count>0</sys_mod_count><sys_updated_by>admin</sys_updated_by><sys_updated_on>2026-06-02 13:38:06</sys_updated_on></sys_ui_list_element><sys_ui_list_element action="INSERT_OR_UPDATE"><average_value>false</average_value><element>status</element><list_id display_value="x_snc_airop_check_result" element="NULL" name="x_snc_airop_check_result" parent="NULL" relationship="NULL" sys_domain="global" view="Default view">82ab21eccfd1c3dc8935fb251d851c53</list_id><max_value>false</max_value><min_value>false</min_value><position>2</position><sum>false</sum><sys_created_by>admin</sys_created_by><sys_created_on>2026-06-02 13:38:06</sys_created_on><sys_id>4eab21eccfd1c3dc8935fb251d851c54</sys_id><sys_mod_count>0</sys_mod_count><sys_updated_by>admin</sys_updated_by><sys_updated_on>2026-06-02 13:38:06</sys_updated_on></sys_ui_list_element><sys_ui_list_element action="INSERT_OR_UPDATE"><average_value>false</average_value><element>sys_created_on</element><list_id display_value="x_snc_airop_check_result" element="NULL" name="x_snc_airop_check_result" parent="NULL" relationship="NULL" sys_domain="global" view="Default view">82ab21eccfd1c3dc8935fb251d851c53</list_id><max_value>false</max_value><min_value>false</min_value><position>3</position><sum>false</sum><sys_created_by>admin</sys_created_by><sys_created_on>2026-06-02 13:38:06</sys_created_on><sys_id>c2ab21eccfd1c3dc8935fb251d851c55</sys_id><sys_mod_count>0</sys_mod_count><sys_updated_by>admin</sys_updated_by><sys_updated_on>2026-06-02 13:38:06</sys_updated_on></sys_ui_list_element><sys_ui_list action="INSERT_OR_UPDATE"><average_value>false</average_value><element/><max_value>false</max_value><min_value>false</min_value><name>x_snc_airop_check_result</name><parent/><position/><relationship/><sum>false</sum><sys_class_name>sys_ui_list</sys_class_name><sys_created_by>admin</sys_created_by><sys_created_on>2026-06-02 13:38:06</sys_created_on><sys_domain>global</sys_domain><sys_domain_path>/</sys_domain_path><sys_id>82ab21eccfd1c3dc8935fb251d851c53</sys_id><sys_mod_count>0</sys_mod_count><sys_name>x_snc_airop_check_result</sys_name><sys_package display_value="ServiceNow AI Readiness Optimization Platform" source="x_snc_airop">73e2562fcf244b908935fb251d851c78</sys_package><sys_policy/><sys_scope display_value="ServiceNow AI Readiness Optimization Platform">73e2562fcf244b908935fb251d851c78</sys_scope><sys_update_name>sys_ui_list_x_snc_airop_check_result_null</sys_update_name><sys_updated_by>admin</sys_updated_by><sys_updated_on>2026-06-02 13:38:06</sys_updated_on><sys_user/><view display_value="Default view" name="NULL">Default view</view><view_name/></sys_ui_list></sys_ui_list></record_update>]]></payload>
+        <payload_hash>-1910285390</payload_hash>
+        <record_name>Check Result</record_name>
+        <reverted_from/>
+        <source>37e29a6bcf644b908935fb251d851c7a</source>
+        <source_table>sys_update_set</source_table>
+        <state>previous</state>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-06-02 13:38:06</sys_created_on>
+        <sys_id>42ab21eccfd1c3dc8935fb251d851c5a</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_recorded_at>19e888e481b0000001</sys_recorded_at>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-06-02 13:38:06</sys_updated_on>
+        <type>List Layout</type>
+        <update_guid>c6ab21ec4ad1c3dcd6334ed3a60c7458</update_guid>
+        <update_guid_history>c6ab21ec4ad1c3dcd6334ed3a60c7458:-1910285390,b08957eff9600f90184649a168ccceb3:2114399738</update_guid_history>
+    </sys_update_version>
+    <sys_metadata_delete action="INSERT_OR_UPDATE">
+        <sys_audit_delete/>
+        <sys_class_name>sys_metadata_delete</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-06-04 17:02:48</sys_created_on>
+        <sys_db_object display_value="" name="sys_ui_list">sys_ui_list</sys_db_object>
+        <sys_id>d66ac799fcb346588b7a6a0fcfa72579</sys_id>
+        <sys_metadata>82ab21eccfd1c3dc8935fb251d851c53</sys_metadata>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>x_snc_airop_check_result</sys_name>
+        <sys_package display_value="ServiceNow AI Readiness Optimization Platform" source="x_snc_airop">73e2562fcf244b908935fb251d851c78</sys_package>
+        <sys_parent display_value="Check Result">e03b13a3cfe00f908935fb251d851c2b</sys_parent>
+        <sys_policy/>
+        <sys_scope display_value="ServiceNow AI Readiness Optimization Platform">73e2562fcf244b908935fb251d851c78</sys_scope>
+        <sys_scope_delete display_value="">3d15655892484816825b3e4059b36991</sys_scope_delete>
+        <sys_update_name>sys_ui_list_x_snc_airop_check_result_null</sys_update_name>
+        <sys_update_version display_value="sys_ui_list_x_snc_airop_check_result_null">42ab21eccfd1c3dc8935fb251d851c5a</sys_update_version>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-06-04 17:02:48</sys_updated_on>
+    </sys_metadata_delete>
+</record_update>

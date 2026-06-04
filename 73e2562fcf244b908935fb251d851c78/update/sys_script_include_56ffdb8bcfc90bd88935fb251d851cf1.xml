@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>public</access>
+        <active>true</active>
+        <api_name>x_snc_airop.AROPCheckLibrary_SPO</api_name>
+        <caller_access/>
+        <client_callable>false</client_callable>
+        <description>AIROP per-module check library for Sourcing and Procurement Operations (SPO). Contains executable check methods injected from active check definitions.</description>
+        <mobile_callable>false</mobile_callable>
+        <name>AROPCheckLibrary_SPO</name>
+        <sandbox_callable>false</sandbox_callable>
+        <script><![CDATA[var AROPCheckLibrary_SPO = Class.create();
+AROPCheckLibrary_SPO.prototype = {
+    initialize: function() {},
+    _count: function(table, query) { var gr = new GlideRecord(table); if (query) gr.addEncodedQuery(query); gr.query(); return gr.getRowCount(); },
+    _pct: function(num, den) { return den > 0 ? Math.round((num/den)*100) : 0; },
+    _daysAgo: function(field, days) { var d = new GlideDateTime(); d.addDaysUTC(-days); return field + '<' + d.getValue(); },
+    CHK0001284: function() {
+        try {
+            return (function(){
+var sa=new GlideRecord("sys_store_app");
+sa.addQuery("scope","sn_spend_gen_ai");
+sa.setLimit(1);sa.query();
+if(sa.next())return{status:"ready",actualValue:"v"+sa.getValue("version"),finding:"Now Assist for SPO is installed."};
+return{status:"value_blocker",actualValue:"Not installed",finding:"Now Assist for SPO (sn_spend_gen_ai) is not installed."};
+})();
+        } catch(e) {
+            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001284: ' + e.message };
+        }
+    },
+    CHK0001285: function() {
+        try {
+            return (function(){
+var sa=new GlideRecord("sys_store_app");
+sa.addQuery("scope","sn_aia");
+sa.setLimit(1);sa.query();
+if(sa.next())return{status:"ready",actualValue:"v"+sa.getValue("version"),finding:"Now Assist AI Agents is installed."};
+return{status:"value_blocker",actualValue:"Not installed",finding:"Now Assist AI Agents (sn_aia) not installed."};
+})();
+        } catch(e) {
+            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001285: ' + e.message };
+        }
+    },
+    CHK0001286: function() {
+        try {
+            return (function(){
+var sa=new GlideRecord("sys_store_app");
+sa.addQuery("scope","sn_shop_va");
+sa.setLimit(1);sa.query();
+if(sa.next())return{status:"ready",actualValue:"v"+sa.getValue("version"),finding:"Virtual Agent for SPO is installed."};
+return{status:"value_blocker",actualValue:"Not installed",finding:"Virtual Agent for SPO (sn_shop_va) is not installed."};
+})();
+        } catch(e) {
+            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001286: ' + e.message };
+        }
+    },
+    CHK0001287: function() {
+        try {
+            return (function(){
+var sa=new GlideRecord("sys_store_app");
+sa.addQuery("scope","sn_spend_nlu");
+sa.setLimit(1);sa.query();
+if(sa.next())return{status:"ready",actualValue:"v"+sa.getValue("version"),finding:"NLU Models for SPO are installed."};
+return{status:"needs_attention",actualValue:"Not installed",finding:"NLU Models for SPO (sn_spend_nlu) not installed."};
+})();
+        } catch(e) {
+            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001287: ' + e.message };
+        }
+    },
+    CHK0001288: function() {
+        try {
+            return (function(){
+var ga=new GlideAggregate("sn_shop_purchase_order");
+ga.addAggregate("COUNT");ga.query();
+var c=ga.next()?parseInt(ga.getAggregate("COUNT")):0;
+if(c>=100)return{status:"ready",actualValue:c+" POs",finding:c+" purchase orders found."};
+if(c>0)return{status:"needs_attention",actualValue:c+" POs",finding:c+" purchase orders found. Limited data."};
+return{status:"value_blocker",actualValue:"0 POs",finding:"No purchase orders found."};
+})();
+        } catch(e) {
+            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001288: ' + e.message };
+        }
+    },
+    CHK0001289: function() {
+        try {
+            return (function(){
+var ga=new GlideAggregate("sn_shop_purchase_requisition");
+ga.addAggregate("COUNT");ga.query();
+var c=ga.next()?parseInt(ga.getAggregate("COUNT")):0;
+if(c>=100)return{status:"ready",actualValue:c+" requisitions",finding:c+" requisitions found."};
+if(c>0)return{status:"needs_attention",actualValue:c+" requisitions",finding:c+" requisitions found."};
+return{status:"value_blocker",actualValue:"0 requisitions",finding:"No requisitions found."};
+})();
+        } catch(e) {
+            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001289: ' + e.message };
+        }
+    },
+    CHK0001290: function() {
+        try {
+            return (function(){
+var ga=new GlideAggregate("sn_shop_supplier_product");
+ga.addAggregate("COUNT");ga.query();
+var c=ga.next()?parseInt(ga.getAggregate("COUNT")):0;
+if(c>=100)return{status:"ready",actualValue:c+" products",finding:c+" supplier products found."};
+if(c>0)return{status:"needs_attention",actualValue:c+" products",finding:c+" supplier products found."};
+return{status:"value_blocker",actualValue:"0 products",finding:"No supplier products found."};
+})();
+        } catch(e) {
+            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001290: ' + e.message };
+        }
+    },
+    CHK0001291: function() {
+        try {
+            return (function(){
+var ga=new GlideAggregate("sn_shop_sourcing_activity");
+ga.addAggregate("COUNT");ga.query();
+var c=ga.next()?parseInt(ga.getAggregate("COUNT")):0;
+if(c>=100)return{status:"ready",actualValue:c+" sourcing requests",finding:c+" sourcing requests found."};
+if(c>0)return{status:"needs_attention",actualValue:c+" sourcing requests",finding:c+" sourcing requests found."};
+return{status:"value_blocker",actualValue:"0 sourcing requests",finding:"No sourcing requests found."};
+})();
+        } catch(e) {
+            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001291: ' + e.message };
+        }
+    },
+    CHK0001292: function() {
+        try {
+            return (function(){
+var ga=new GlideAggregate("sn_shop_negotiation");
+ga.addAggregate("COUNT");ga.query();
+var c=ga.next()?parseInt(ga.getAggregate("COUNT")):0;
+if(c>=50)return{status:"ready",actualValue:c+" negotiations",finding:c+" negotiations found."};
+if(c>0)return{status:"needs_attention",actualValue:c+" negotiations",finding:c+" negotiations found."};
+return{status:"value_blocker",actualValue:"0 negotiations",finding:"No sourcing negotiations found."};
+})();
+        } catch(e) {
+            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001292: ' + e.message };
+        }
+    },
+    CHK0001293: function() {
+        try {
+            return (function(){
+var sa=new GlideRecord("sys_store_app");
+sa.addQuery("scope","sn_spend_uib");
+sa.setLimit(1);sa.query();
+if(sa.next())return{status:"ready",actualValue:"v"+sa.getValue("version"),finding:"Shopping Hub is installed."};
+return{status:"value_blocker",actualValue:"Not installed",finding:"Shopping Hub (sn_spend_uib) is not installed. SPO AI skills unavailable."};
+})();
+        } catch(e) {
+            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001293: ' + e.message };
+        }
+    },
+    type: 'AROPCheckLibrary_SPO'
+};]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-05-29 06:15:25</sys_created_on>
+        <sys_id>56ffdb8bcfc90bd88935fb251d851cf1</sys_id>
+        <sys_mod_count>5</sys_mod_count>
+        <sys_name>AROPCheckLibrary_SPO</sys_name>
+        <sys_package display_value="ServiceNow AI Readiness Optimization Platform" source="x_snc_airop">73e2562fcf244b908935fb251d851c78</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="ServiceNow AI Readiness Optimization Platform">73e2562fcf244b908935fb251d851c78</sys_scope>
+        <sys_update_name>sys_script_include_56ffdb8bcfc90bd88935fb251d851cf1</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-06-02 09:00:27</sys_updated_on>
+    </sys_script_include>
+</record_update>
