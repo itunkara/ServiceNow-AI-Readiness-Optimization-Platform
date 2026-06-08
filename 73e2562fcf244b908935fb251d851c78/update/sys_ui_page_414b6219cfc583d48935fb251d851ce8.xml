@@ -4,7 +4,7 @@
         <client_script/>
         <description/>
         <direct>false</direct>
-        <endpoint>x_snc_airop_w.do</endpoint>
+        <endpoint>x_snc_airop_airop_admin.do</endpoint>
         <html><![CDATA[<j:jelly trim="false" xmlns:j="jelly:core" xmlns:g="glide" xmlns:j2="null" xmlns:g2="null">
 <div style="padding: 20px; font-family: Arial, sans-serif; max-width: 800px;">
     <h2 style="color: #293e40; border-bottom: 2px solid #81b5a1; padding-bottom: 10px;">
@@ -117,19 +117,19 @@ function loadDefaultDefinitions() {
 }
 </script>
 </j:jelly>]]></html>
-        <name>w</name>
+        <name>airop_admin</name>
         <processing_script/>
         <sys_class_name>sys_ui_page</sys_class_name>
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2026-05-23 15:57:38</sys_created_on>
         <sys_id>414b6219cfc583d48935fb251d851ce8</sys_id>
-        <sys_mod_count>3</sys_mod_count>
-        <sys_name>w</sys_name>
+        <sys_mod_count>4</sys_mod_count>
+        <sys_name>airop_admin</sys_name>
         <sys_package display_value="ServiceNow AI Readiness Optimization Platform" source="x_snc_airop">73e2562fcf244b908935fb251d851c78</sys_package>
         <sys_policy/>
         <sys_scope display_value="ServiceNow AI Readiness Optimization Platform">73e2562fcf244b908935fb251d851c78</sys_scope>
         <sys_update_name>sys_ui_page_414b6219cfc583d48935fb251d851ce8</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2026-06-08 16:31:15</sys_updated_on>
+        <sys_updated_on>2026-06-08 19:43:52</sys_updated_on>
     </sys_ui_page>
 </record_update>
