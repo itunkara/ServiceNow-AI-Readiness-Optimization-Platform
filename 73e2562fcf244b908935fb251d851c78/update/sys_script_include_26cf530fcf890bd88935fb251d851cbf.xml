@@ -14,8 +14,7 @@ AROPCheckLibrary_LSD.prototype = {
     initialize: function() {},
     _count: function(table, query) { var gr = new GlideRecord(table); if (query) gr.addEncodedQuery(query); gr.query(); return gr.getRowCount(); },
     _pct: function(num, den) { return den > 0 ? Math.round((num/den)*100) : 0; },
-    _daysAgo: function(field, days) { var d = new GlideDateTime(); d.addDaysUTC(-days); return field + '<' + d.getValue(); },
-    CHK0001210: function() {
+    CHK0005194: function() {
         try {
             return (function(){
 var ga=new GlideAggregate("sc_cat_item");
@@ -27,10 +26,63 @@ if(c>0)return{status:"needs_attention",actualValue:c+" items",finding:c+" legal 
 return{status:"needs_attention",actualValue:"0 items",finding:"No legal catalog items found."};
 })();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001210: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005194: ' + e.message };
         }
     },
-    CHK0001211: function() {
+    CHK0005199: function() {
+        try {
+            return (function() {
+    var t = new GlideRecord("sn_lg_contracts_repository");
+    if (!t.isValid()) {
+        return { status: "value_blocker", actualValue: "Required table sn_lg_contracts_repository not found", finding: "Legal Contract Repository table is not available. Verify the Legal Service Delivery plugin is active." };
+    }
+    var ga = new GlideAggregate("sn_lg_contracts_repository");
+    ga.addAggregate("COUNT");
+    ga.query();
+    var c = ga.next() ? parseInt(ga.getAggregate("COUNT")) : 0;
+    if (c >= 50) return { status: "ready", actualValue: c + " legal documents", finding: c + " legal contract documents found. Now Assist LSD has sufficient document data for AI-assisted legal summarization and review." };
+    if (c > 0) return { status: "needs_attention", actualValue: c + " legal documents", finding: c + " legal document(s) found (target: 50+). Limited document volume reduces Now Assist LSD AI summarization accuracy." };
+    return { status: "value_blocker", actualValue: "0 legal documents", finding: "No legal contract documents found. Now Assist LSD requires document data for AI-assisted legal review and summarization." };
+})();
+        } catch(e) {
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005199: ' + e.message };
+        }
+    },
+    CHK0005203: function() {
+        try {
+            return (function(){
+var ga=new GlideAggregate("sys_user_group");
+ga.addQuery("name","CONTAINS","legal");
+ga.addAggregate("COUNT");ga.query();
+var c=ga.next()?parseInt(ga.getAggregate("COUNT")):0;
+if(c>=2)return{status:"ready",actualValue:c+" groups",finding:c+" legal assignment groups found."};
+if(c>0)return{status:"needs_attention",actualValue:c+" group",finding:c+" legal group found."};
+return{status:"value_blocker",actualValue:"0 groups",finding:"No legal assignment groups found."};
+})();
+        } catch(e) {
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005203: ' + e.message };
+        }
+    },
+    CHK0005200: function() {
+        try {
+            return (function() {
+    var t = new GlideRecord("sn_lg_matter_team_member");
+    if (!t.isValid()) {
+        return { status: "value_blocker", actualValue: "Required table sn_lg_matter_team_member not found", finding: "Legal Matter Team Member table is not available. Verify the Legal Matter Management plugin is active." };
+    }
+    var ga = new GlideAggregate("sn_lg_matter_team_member");
+    ga.addAggregate("COUNT");
+    ga.query();
+    var c = ga.next() ? parseInt(ga.getAggregate("COUNT")) : 0;
+    if (c >= 10) return { status: "ready", actualValue: c + " matter team records", finding: c + " matter team member records found. Now Assist LSD has sufficient team assignment data for AI-assisted matter routing." };
+    if (c > 0) return { status: "needs_attention", actualValue: c + " matter team records", finding: c + " matter team record(s) found (target: 10+). Limited team assignment data reduces Now Assist LSD AI routing accuracy." };
+    return { status: "needs_attention", actualValue: "0 matter team records", finding: "No matter team member records found. Configure matter team assignments to enable Now Assist LSD AI-assisted matter routing." };
+})();
+        } catch(e) {
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005200: ' + e.message };
+        }
+    },
+    CHK0005195: function() {
         try {
             return (function(){
 var sa=new GlideRecord("sys_store_app");
@@ -40,80 +92,17 @@ if(sa.next())return{status:"ready",actualValue:"v"+sa.getValue("version"),findin
 return{status:"value_blocker",actualValue:"Not installed",finding:"Now Assist for Legal (sn_lg_gen_ai) is not installed."};
 })();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001211: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005195: ' + e.message };
         }
     },
-    CHK0001212: function() {
+    CHK0005196: function() {
         try {
-            return (function(){
-var ga=new GlideAggregate("sn_lg_ops_request");
-ga.addAggregate("COUNT");ga.query();
-var c=ga.next()?parseInt(ga.getAggregate("COUNT")):0;
-if(c>=100)return{status:"ready",actualValue:c+" requests",finding:c+" legal requests found."};
-if(c>0)return{status:"needs_attention",actualValue:c+" requests",finding:c+" legal requests found."};
-return{status:"value_blocker",actualValue:"0 requests",finding:"No legal requests found."};
-})();
+            return (function(){try{var ga=new GlideAggregate("sn_lg_ops_request");ga.addAggregate("COUNT");ga.query();var c=ga.next()?parseInt(ga.getAggregate("COUNT")):0;if(c>=100)return{status:"ready",actualValue:c+" requests",finding:c+" legal requests found."};if(c>0)return{status:"needs_attention",actualValue:c+" requests",finding:c+" legal requests found."};return{status:"value_blocker",actualValue:"0 requests",finding:"No legal requests found."};}catch(e){return{status:"needs_validation",actualValue:"Check failed — manual verification required",finding:"Script execution error: "+e.message};}})();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001212: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005196: ' + e.message };
         }
     },
-    CHK0001213: function() {
-        try {
-            return (function(){
-var ga=new GlideAggregate("sn_lg_ops_matter");
-ga.addAggregate("COUNT");ga.query();
-var c=ga.next()?parseInt(ga.getAggregate("COUNT")):0;
-if(c>=50)return{status:"ready",actualValue:c+" matters",finding:c+" legal matters found."};
-if(c>0)return{status:"needs_attention",actualValue:c+" matters",finding:c+" legal matters found."};
-return{status:"value_blocker",actualValue:"0 matters",finding:"No legal matters found."};
-})();
-        } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001213: ' + e.message };
-        }
-    },
-    CHK0001214: function() {
-        try {
-            return (function(){
-var ga=new GlideAggregate("sn_lg_ops_task");
-ga.addAggregate("COUNT");ga.query();
-var c=ga.next()?parseInt(ga.getAggregate("COUNT")):0;
-if(c>=50)return{status:"ready",actualValue:c+" tasks",finding:c+" legal tasks found."};
-if(c>0)return{status:"needs_attention",actualValue:c+" tasks",finding:c+" legal tasks found."};
-return{status:"value_blocker",actualValue:"0 tasks",finding:"No legal tasks found."};
-})();
-        } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001214: ' + e.message };
-        }
-    },
-    CHK0001215: function() {
-        try {
-            return (function(){
-var ga=new GlideAggregate("sn_lg_ops_document");
-ga.addAggregate("COUNT");ga.query();
-var c=ga.next()?parseInt(ga.getAggregate("COUNT")):0;
-if(c>=50)return{status:"ready",actualValue:c+" documents",finding:c+" legal documents found."};
-if(c>0)return{status:"needs_attention",actualValue:c+" documents",finding:c+" legal documents found."};
-return{status:"needs_attention",actualValue:"0 documents",finding:"No legal documents found."};
-})();
-        } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001215: ' + e.message };
-        }
-    },
-    CHK0001216: function() {
-        try {
-            return (function(){
-var ga=new GlideAggregate("sn_lg_ops_matter_team");
-ga.addAggregate("COUNT");ga.query();
-var c=ga.next()?parseInt(ga.getAggregate("COUNT")):0;
-if(c>=10)return{status:"ready",actualValue:c+" team records",finding:c+" matter team records found."};
-if(c>0)return{status:"needs_attention",actualValue:c+" team records",finding:c+" matter team records found."};
-return{status:"needs_attention",actualValue:"0 records",finding:"No matter team records found."};
-})();
-        } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001216: ' + e.message };
-        }
-    },
-    CHK0001217: function() {
+    CHK0005201: function() {
         try {
             return (function(){
 var ga=new GlideAggregate("kb_knowledge");
@@ -126,10 +115,10 @@ if(c>0)return{status:"needs_attention",actualValue:c+" articles",finding:c+" leg
 return{status:"value_blocker",actualValue:"0 articles",finding:"No legal KB articles found."};
 })();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001217: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005201: ' + e.message };
         }
     },
-    CHK0001218: function() {
+    CHK0005202: function() {
         try {
             return (function(){
 var ga=new GlideAggregate("sys_cs_topic");
@@ -141,22 +130,33 @@ if(c>0)return{status:"needs_attention",actualValue:c+" topics",finding:c+" legal
 return{status:"needs_attention",actualValue:"0 topics",finding:"No legal Virtual Agent topics found."};
 })();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001218: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005202: ' + e.message };
         }
     },
-    CHK0001219: function() {
+    CHK0005197: function() {
         try {
-            return (function(){
-var ga=new GlideAggregate("sys_user_group");
-ga.addQuery("name","CONTAINS","legal");
-ga.addAggregate("COUNT");ga.query();
-var c=ga.next()?parseInt(ga.getAggregate("COUNT")):0;
-if(c>=2)return{status:"ready",actualValue:c+" groups",finding:c+" legal assignment groups found."};
-if(c>0)return{status:"needs_attention",actualValue:c+" group",finding:c+" legal group found."};
-return{status:"value_blocker",actualValue:"0 groups",finding:"No legal assignment groups found."};
+            return (function(){try{var t=new GlideRecord("sn_lg_matter_matter");if(!t.isValid()){return{status:"value_blocker",actualValue:"Required table sn_lg_matter_matter not found",finding:"Legal Matter table is not available. Verify the Legal Service Delivery plugin is active."};} var ga=new GlideAggregate("sn_lg_matter_matter");ga.addAggregate("COUNT");ga.query();var c=ga.next()?parseInt(ga.getAggregate("COUNT")):0;if(c>=50)return{status:"ready",actualValue:c+" legal matters",finding:c+" legal matters found. Now Assist LSD has sufficient matter data for AI-assisted legal triage and summarization."};if(c>0)return{status:"needs_attention",actualValue:c+" legal matters",finding:c+" legal matter(s) found (target: 50+). Limited matter volume reduces Now Assist LSD AI summarization accuracy."};return{status:"value_blocker",actualValue:"0 legal matters",finding:"No legal matters found. Now Assist LSD requires matter data for AI-assisted legal triage and summarization."};}catch(e){return{status:"needs_validation",actualValue:"Check failed — manual verification required",finding:"Script execution error: "+e.message};}})();
+        } catch(e) {
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005197: ' + e.message };
+        }
+    },
+    CHK0005198: function() {
+        try {
+            return (function() {
+    var t = new GlideRecord("sn_lg_matter_task");
+    if (!t.isValid()) {
+        return { status: "value_blocker", actualValue: "Required table sn_lg_matter_task not found", finding: "Legal Matter Task table is not available. Verify the Legal Service Delivery plugin is active." };
+    }
+    var ga = new GlideAggregate("sn_lg_matter_task");
+    ga.addAggregate("COUNT");
+    ga.query();
+    var c = ga.next() ? parseInt(ga.getAggregate("COUNT")) : 0;
+    if (c >= 50) return { status: "ready", actualValue: c + " legal tasks", finding: c + " legal tasks found. Now Assist LSD has sufficient task data for AI-assisted task assignment and prioritization." };
+    if (c > 0) return { status: "needs_attention", actualValue: c + " legal tasks", finding: c + " legal task(s) found (target: 50+). Limited task volume reduces Now Assist LSD AI assignment accuracy." };
+    return { status: "value_blocker", actualValue: "0 legal tasks", finding: "No legal tasks found. Now Assist LSD requires task data for AI-assisted assignment and prioritization." };
 })();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001219: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005198: ' + e.message };
         }
     },
     type: 'AROPCheckLibrary_LSD'
@@ -165,13 +165,13 @@ return{status:"value_blocker",actualValue:"0 groups",finding:"No legal assignmen
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2026-05-29 06:14:36</sys_created_on>
         <sys_id>26cf530fcf890bd88935fb251d851cbf</sys_id>
-        <sys_mod_count>5</sys_mod_count>
+        <sys_mod_count>8</sys_mod_count>
         <sys_name>AROPCheckLibrary_LSD</sys_name>
         <sys_package display_value="ServiceNow AI Readiness Optimization Platform" source="x_snc_airop">73e2562fcf244b908935fb251d851c78</sys_package>
         <sys_policy/>
         <sys_scope display_value="ServiceNow AI Readiness Optimization Platform">73e2562fcf244b908935fb251d851c78</sys_scope>
         <sys_update_name>sys_script_include_26cf530fcf890bd88935fb251d851cbf</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2026-06-02 09:00:27</sys_updated_on>
+        <sys_updated_on>2026-06-08 16:10:54</sys_updated_on>
     </sys_script_include>
 </record_update>

@@ -14,21 +14,7 @@ AROPCheckLibrary_HS.prototype = {
     initialize: function() {},
     _count: function(table, query) { var gr = new GlideRecord(table); if (query) gr.addEncodedQuery(query); gr.query(); return gr.getRowCount(); },
     _pct: function(num, den) { return den > 0 ? Math.round((num/den)*100) : 0; },
-    _daysAgo: function(field, days) { var d = new GlideDateTime(); d.addDaysUTC(-days); return field + '<' + d.getValue(); },
-    CHK0001141: function() {
-        try {
-            return (function(){
-var sa=new GlideRecord("sys_store_app");
-sa.addQuery("scope","sn_hs_gen_ai");
-sa.setLimit(1);sa.query();
-if(sa.next())return{status:"ready",actualValue:"v"+sa.getValue("version"),finding:"Now Assist for Health & Safety is installed."};
-return{status:"value_blocker",actualValue:"Not installed",finding:"Now Assist for Health & Safety (sn_hs_gen_ai) is not installed."};
-})();
-        } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001141: ' + e.message };
-        }
-    },
-    CHK0001142: function() {
+    CHK0005127: function() {
         try {
             return (function(){
 var ga=new GlideAggregate("sn_hs_cm_case");
@@ -39,52 +25,10 @@ if(c>0)return{status:"needs_attention",actualValue:c+" cases",finding:c+" HS cas
 return{status:"needs_attention",actualValue:"0 cases",finding:"No HS cases found. Module may be newly deployed."};
 })();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001142: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005127: ' + e.message };
         }
     },
-    CHK0001143: function() {
-        try {
-            return (function(){
-var ga=new GlideAggregate("sn_hs_rm_audit");
-ga.addAggregate("COUNT");ga.query();
-var c=ga.next()?parseInt(ga.getAggregate("COUNT")):0;
-if(c>=20)return{status:"ready",actualValue:c+" audits",finding:c+" HS audits found."};
-if(c>0)return{status:"needs_attention",actualValue:c+" audits",finding:c+" HS audits found."};
-return{status:"needs_attention",actualValue:"0 audits",finding:"No HS audits found."};
-})();
-        } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001143: ' + e.message };
-        }
-    },
-    CHK0001144: function() {
-        try {
-            return (function(){
-var ga=new GlideAggregate("sn_hs_rm_inspection");
-ga.addAggregate("COUNT");ga.query();
-var c=ga.next()?parseInt(ga.getAggregate("COUNT")):0;
-if(c>=20)return{status:"ready",actualValue:c+" inspections",finding:c+" inspections found."};
-if(c>0)return{status:"needs_attention",actualValue:c+" inspections",finding:c+" inspections found."};
-return{status:"needs_attention",actualValue:"0 inspections",finding:"No safety inspections found."};
-})();
-        } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001144: ' + e.message };
-        }
-    },
-    CHK0001145: function() {
-        try {
-            return (function(){
-var ga=new GlideAggregate("sn_hs_rm_risk_assessment");
-ga.addAggregate("COUNT");ga.query();
-var c=ga.next()?parseInt(ga.getAggregate("COUNT")):0;
-if(c>=10)return{status:"ready",actualValue:c+" assessments",finding:c+" HS risk assessments found."};
-if(c>0)return{status:"needs_attention",actualValue:c+" assessments",finding:c+" HS risk assessments found."};
-return{status:"needs_attention",actualValue:"0 assessments",finding:"No HS risk assessments found."};
-})();
-        } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001145: ' + e.message };
-        }
-    },
-    CHK0001146: function() {
+    CHK0005131: function() {
         try {
             return (function(){
 var ga=new GlideAggregate("sn_hs_rm_hazard");
@@ -95,38 +39,10 @@ if(c>0)return{status:"needs_attention",actualValue:c+" hazards",finding:c+" haza
 return{status:"value_blocker",actualValue:"0 hazards",finding:"No hazard records found."};
 })();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001146: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005131: ' + e.message };
         }
     },
-    CHK0001147: function() {
-        try {
-            return (function(){
-var ga=new GlideAggregate("sn_hs_rm_work_permit");
-ga.addAggregate("COUNT");ga.query();
-var c=ga.next()?parseInt(ga.getAggregate("COUNT")):0;
-if(c>=20)return{status:"ready",actualValue:c+" permits",finding:c+" work permits found."};
-if(c>0)return{status:"needs_attention",actualValue:c+" permits",finding:c+" work permits found."};
-return{status:"needs_attention",actualValue:"0 permits",finding:"No work permits found."};
-})();
-        } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001147: ' + e.message };
-        }
-    },
-    CHK0001148: function() {
-        try {
-            return (function(){
-var ga=new GlideAggregate("sn_hs_rm_safety_register");
-ga.addAggregate("COUNT");ga.query();
-var c=ga.next()?parseInt(ga.getAggregate("COUNT")):0;
-if(c>=10)return{status:"ready",actualValue:c+" register items",finding:c+" safety register items found."};
-if(c>0)return{status:"needs_attention",actualValue:c+" register items",finding:c+" safety register items found."};
-return{status:"needs_attention",actualValue:"0 items",finding:"No safety register items found."};
-})();
-        } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001148: ' + e.message };
-        }
-    },
-    CHK0001149: function() {
+    CHK0005134: function() {
         try {
             return (function(){
 var ga=new GlideAggregate("sn_hs_rm_finding");
@@ -137,10 +53,10 @@ if(c>0)return{status:"needs_attention",actualValue:c+" findings",finding:c+" HS 
 return{status:"needs_attention",actualValue:"0 findings",finding:"No HS findings found."};
 })();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001149: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005134: ' + e.message };
         }
     },
-    CHK0001150: function() {
+    CHK0005135: function() {
         try {
             return (function(){
 var ga=new GlideAggregate("sys_user_group");
@@ -152,7 +68,90 @@ if(c>0)return{status:"needs_attention",actualValue:c+" group",finding:c+" safety
 return{status:"value_blocker",actualValue:"0 groups",finding:"No safety assignment groups found."};
 })();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001150: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005135: ' + e.message };
+        }
+    },
+    CHK0005128: function() {
+        try {
+            return (function(){
+var ga=new GlideAggregate("sn_hs_rm_audit");
+ga.addAggregate("COUNT");ga.query();
+var c=ga.next()?parseInt(ga.getAggregate("COUNT")):0;
+if(c>=20)return{status:"ready",actualValue:c+" audits",finding:c+" HS audits found."};
+if(c>0)return{status:"needs_attention",actualValue:c+" audits",finding:c+" HS audits found."};
+return{status:"needs_attention",actualValue:"0 audits",finding:"No HS audits found."};
+})();
+        } catch(e) {
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005128: ' + e.message };
+        }
+    },
+    CHK0005129: function() {
+        try {
+            return (function(){
+var ga=new GlideAggregate("sn_hs_rm_inspection");
+ga.addAggregate("COUNT");ga.query();
+var c=ga.next()?parseInt(ga.getAggregate("COUNT")):0;
+if(c>=20)return{status:"ready",actualValue:c+" inspections",finding:c+" inspections found."};
+if(c>0)return{status:"needs_attention",actualValue:c+" inspections",finding:c+" inspections found."};
+return{status:"needs_attention",actualValue:"0 inspections",finding:"No safety inspections found."};
+})();
+        } catch(e) {
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005129: ' + e.message };
+        }
+    },
+    CHK0005132: function() {
+        try {
+            return (function(){
+var ga=new GlideAggregate("sn_hs_rm_work_permit");
+ga.addAggregate("COUNT");ga.query();
+var c=ga.next()?parseInt(ga.getAggregate("COUNT")):0;
+if(c>=20)return{status:"ready",actualValue:c+" permits",finding:c+" work permits found."};
+if(c>0)return{status:"needs_attention",actualValue:c+" permits",finding:c+" work permits found."};
+return{status:"needs_attention",actualValue:"0 permits",finding:"No work permits found."};
+})();
+        } catch(e) {
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005132: ' + e.message };
+        }
+    },
+    CHK0005126: function() {
+        try {
+            return (function(){
+var sa=new GlideRecord("sys_store_app");
+sa.addQuery("scope","sn_hs_gen_ai");
+sa.setLimit(1);sa.query();
+if(sa.next())return{status:"ready",actualValue:"v"+sa.getValue("version"),finding:"Now Assist for Health & Safety is installed."};
+return{status:"value_blocker",actualValue:"Not installed",finding:"Now Assist for Health & Safety (sn_hs_gen_ai) is not installed."};
+})();
+        } catch(e) {
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005126: ' + e.message };
+        }
+    },
+    CHK0005130: function() {
+        try {
+            return (function(){
+var ga=new GlideAggregate("sn_hs_rm_risk_assessment");
+ga.addAggregate("COUNT");ga.query();
+var c=ga.next()?parseInt(ga.getAggregate("COUNT")):0;
+if(c>=10)return{status:"ready",actualValue:c+" assessments",finding:c+" HS risk assessments found."};
+if(c>0)return{status:"needs_attention",actualValue:c+" assessments",finding:c+" HS risk assessments found."};
+return{status:"needs_attention",actualValue:"0 assessments",finding:"No HS risk assessments found."};
+})();
+        } catch(e) {
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005130: ' + e.message };
+        }
+    },
+    CHK0005133: function() {
+        try {
+            return (function(){
+var ga=new GlideAggregate("sn_hs_rm_safety_register");
+ga.addAggregate("COUNT");ga.query();
+var c=ga.next()?parseInt(ga.getAggregate("COUNT")):0;
+if(c>=10)return{status:"ready",actualValue:c+" register items",finding:c+" safety register items found."};
+if(c>0)return{status:"needs_attention",actualValue:c+" register items",finding:c+" safety register items found."};
+return{status:"needs_attention",actualValue:"0 items",finding:"No safety register items found."};
+})();
+        } catch(e) {
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005133: ' + e.message };
         }
     },
     type: 'AROPCheckLibrary_HS'
@@ -161,13 +160,13 @@ return{status:"value_blocker",actualValue:"0 groups",finding:"No safety assignme
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2026-05-29 06:17:07</sys_created_on>
         <sys_id>1350e3cfcfc90bd88935fb251d851c27</sys_id>
-        <sys_mod_count>5</sys_mod_count>
+        <sys_mod_count>8</sys_mod_count>
         <sys_name>AROPCheckLibrary_HS</sys_name>
         <sys_package display_value="ServiceNow AI Readiness Optimization Platform" source="x_snc_airop">73e2562fcf244b908935fb251d851c78</sys_package>
         <sys_policy/>
         <sys_scope display_value="ServiceNow AI Readiness Optimization Platform">73e2562fcf244b908935fb251d851c78</sys_scope>
         <sys_update_name>sys_script_include_1350e3cfcfc90bd88935fb251d851c27</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2026-06-02 09:00:27</sys_updated_on>
+        <sys_updated_on>2026-06-08 16:10:54</sys_updated_on>
     </sys_script_include>
 </record_update>

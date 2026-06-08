@@ -14,8 +14,7 @@ AROPCheckLibrary_SPM.prototype = {
     initialize: function() {},
     _count: function(table, query) { var gr = new GlideRecord(table); if (query) gr.addEncodedQuery(query); gr.query(); return gr.getRowCount(); },
     _pct: function(num, den) { return den > 0 ? Math.round((num/den)*100) : 0; },
-    _daysAgo: function(field, days) { var d = new GlideDateTime(); d.addDaysUTC(-days); return field + '<' + d.getValue(); },
-    CHK0001272: function() {
+    CHK0005256: function() {
         try {
             return (function(checkDef, dateFilter) {
     var checkPlugin = (function checkPlugin(storeScope, pluginSource) {    var result = { found: false, version: "", table: "" };    try {        var saGR = new GlideRecord("sys_store_app");        saGR.addQuery("scope", storeScope);        saGR.setLimit(1);        saGR.query();        if (saGR.next()) {            result.found = true;            result.version = saGR.getValue("version") || "";            result.table = "sys_store_app";            return result;        }    } catch(e1) {}    if (pluginSource) {        try {            var spGR = new GlideRecord("sys_plugins");            spGR.addQuery("source", pluginSource);            spGR.addQuery("active", true);            spGR.setLimit(1);            spGR.query();            if (spGR.next()) {                result.found = true;                result.version = spGR.getValue("version") || "";                result.table = "sys_plugins";                return result;            }        } catch(e2) {}    }    return result;});
@@ -35,10 +34,10 @@ AROPCheckLibrary_SPM.prototype = {
     }
 })();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001272: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005256: ' + e.message };
         }
     },
-    CHK0001273: function() {
+    CHK0005257: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var ga = new GlideAggregate('dmn_demand');
@@ -70,10 +69,10 @@ AROPCheckLibrary_SPM.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001273: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005257: ' + e.message };
         }
     },
-    CHK0001274: function() {
+    CHK0005258: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var gaTotal = new GlideAggregate('pm_project');
@@ -121,10 +120,10 @@ AROPCheckLibrary_SPM.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001274: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005258: ' + e.message };
         }
     },
-    CHK0001275: function() {
+    CHK0005259: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var ga = new GlideAggregate('resource_plan');
@@ -156,10 +155,10 @@ AROPCheckLibrary_SPM.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001275: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005259: ' + e.message };
         }
     },
-    CHK0001280: function() {
+    CHK0005260: function() {
         try {
             return ((function(checkDef, dateFilter) {
     // im_idea_core is the OOB base table for ideas in SPM — extends task
@@ -193,10 +192,10 @@ AROPCheckLibrary_SPM.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001280: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005260: ' + e.message };
         }
     },
-    CHK0001281: function() {
+    CHK0005261: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var gaTotal = new GlideAggregate('pm_project');
@@ -244,102 +243,73 @@ AROPCheckLibrary_SPM.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001281: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005261: ' + e.message };
         }
     },
-    CHK0001282: function() {
+    CHK0005262: function() {
         try {
-            return ((function(checkDef, dateFilter) {
-    var ga = new GlideAggregate('spm_strategy');
-    ga.addQuery('active', true);
-    ga.addAggregate('COUNT');
+            return (function() {
+    var t = new GlideRecord("enterprise_strategy");
+    if (!t.isValid()) {
+        return { status: "value_blocker", actualValue: "Required table enterprise_strategy not found", finding: "Enterprise Strategy table is not available. Verify the Strategic Portfolio Management plugin is active." };
+    }
+    var ga = new GlideAggregate("enterprise_strategy");
+    ga.addAggregate("COUNT");
     ga.query();
-    var count = ga.next() ? parseInt(ga.getAggregate('COUNT')) : 0;
-
-    var actualValue = count + ' active strategic objectives';
-
+    var count = ga.next() ? parseInt(ga.getAggregate("COUNT")) : 0;
+    var actualValue = count + " enterprise strategic objectives";
     if (count >= 3) {
-        return {
-            status: 'ready',
-            actualValue: actualValue,
-            finding: count + ' active strategic objectives — Now Assist SPM can score portfolio decisions against strategic priorities using AI.'
-        };
+        return { status: "ready", actualValue: actualValue, finding: count + " enterprise strategic objectives — Now Assist SPM can score portfolio decisions against strategic priorities using AI." };
     } else if (count >= 1) {
-        return {
-            status: 'needs_attention',
-            actualValue: actualValue,
-            finding: 'Only ' + count + ' strategic objective(s) defined (target: 3+). Now Assist SPM portfolio alignment recommendations will have a narrow strategic frame.'
-        };
+        return { status: "needs_attention", actualValue: actualValue, finding: "Only " + count + " strategic objective(s) defined (target: 3+). Now Assist SPM portfolio alignment recommendations will have a narrow strategic frame." };
     } else {
-        return {
-            status: 'not_ready',
-            actualValue: actualValue,
-            finding: 'No strategic objectives defined. Now Assist SPM requires strategic context for AI portfolio alignment recommendations.'
-        };
+        return { status: "value_blocker", actualValue: actualValue, finding: "No strategic objectives defined. Now Assist SPM requires strategic context for AI portfolio alignment recommendations." };
     }
-}))();
+})();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001282: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005262: ' + e.message };
         }
     },
-    CHK0001283: function() {
+    CHK0005263: function() {
         try {
-            return ((function(checkDef, dateFilter) {
-    var gaTotal = new GlideAggregate('pm_milestone');
-    gaTotal.addQuery('active', true);
-    gaTotal.addAggregate('COUNT');
-    gaTotal.query();
-    var total = gaTotal.next() ? parseInt(gaTotal.getAggregate('COUNT')) : 0;
-
-    if (total === 0) {
-        return {
-            status: 'not_applicable',
-            actualValue: 'No active milestones found',
-            finding: 'No active milestones on this instance. Milestone tracking cannot be assessed.'
-        };
+            return (function() {
+    var t = new GlideRecord("pm_milestone");
+    if (!t.isValid()) {
+        return { status: "value_blocker", actualValue: "Required table pm_milestone not found", finding: "Project Milestone table (pm_milestone) is not available. Verify the Project Management plugin is active." };
     }
-
-    // Use GlideDate for reliable date field comparison
+    var gaTotal = new GlideAggregate("pm_milestone");
+    gaTotal.addQuery("active", true);
+    gaTotal.addAggregate("COUNT");
+    gaTotal.query();
+    var total = gaTotal.next() ? parseInt(gaTotal.getAggregate("COUNT")) : 0;
+    if (total === 0) {
+        return { status: "not_applicable", actualValue: "No active milestones found", finding: "No active milestones on this instance. Milestone tracking cannot be assessed." };
+    }
     var today = new GlideDate();
     today.setValue(gs.nowDateTime());
     var todayStr = today.getValue();
-
-    var gaLate = new GlideAggregate('pm_milestone');
-    gaLate.addQuery('active', true);
-    gaLate.addQuery('end_date', '<', todayStr);
-    gaLate.addQuery('percent_complete', '<', 100);
-    gaLate.addAggregate('COUNT');
+    var gaLate = new GlideAggregate("pm_milestone");
+    gaLate.addQuery("active", true);
+    gaLate.addQuery("end_date", "<", todayStr);
+    gaLate.addQuery("percent_complete", "<", 100);
+    gaLate.addAggregate("COUNT");
     gaLate.query();
-    var lateCount = gaLate.next() ? parseInt(gaLate.getAggregate('COUNT')) : 0;
-
+    var lateCount = gaLate.next() ? parseInt(gaLate.getAggregate("COUNT")) : 0;
     var latePct = Math.round((lateCount / total) * 100);
-    var actualValue = total + ' active milestones | ' + lateCount + ' overdue (' + latePct + '%)';
-
+    var actualValue = total + " active milestones | " + lateCount + " overdue (" + latePct + "%)";
     if (total >= 20 && latePct <= 10) {
-        return {
-            status: 'ready',
-            actualValue: actualValue,
-            finding: total + ' active milestones with only ' + latePct + '% overdue. Now Assist SPM has healthy schedule data for AI delivery prediction and risk identification.'
-        };
+        return { status: "ready", actualValue: actualValue, finding: total + " active milestones with only " + latePct + "% overdue. Now Assist SPM has healthy schedule data for AI delivery prediction and risk identification." };
     } else if (latePct <= 25) {
-        return {
-            status: 'needs_attention',
-            actualValue: actualValue,
-            finding: lateCount + ' overdue milestones (' + latePct + '% of active). Now Assist SPM schedule risk predictions will reflect existing delivery delays.'
-        };
+        return { status: "needs_attention", actualValue: actualValue, finding: lateCount + " overdue milestones (" + latePct + "% of active). Now Assist SPM schedule risk predictions will reflect existing delivery delays." };
     } else {
-        return {
-            status: 'not_ready',
-            actualValue: actualValue,
-            finding: lateCount + ' overdue milestones (' + latePct + '% of active). High overdue rate indicates schedule data quality issues that will reduce Now Assist SPM AI delivery prediction accuracy.'
-        };
+        return { status: "value_blocker", actualValue: actualValue, finding: lateCount + " overdue milestones (" + latePct + "% of active). High overdue rate indicates schedule data quality issues that will reduce Now Assist SPM AI delivery prediction accuracy." };
     }
-}))();
+})();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001283: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005263: ' + e.message };
         }
     },
-    CHK0001276: function() {
+    CHK0005264: function() {
         try {
             return ((function(checkDef, dateFilter) {
     // pm_project.state is INTEGER: 3=Closed Complete, 4=Closed Incomplete
@@ -388,10 +358,10 @@ AROPCheckLibrary_SPM.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001276: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005264: ' + e.message };
         }
     },
-    CHK0001277: function() {
+    CHK0005265: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var matched = {};
@@ -434,10 +404,10 @@ AROPCheckLibrary_SPM.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001277: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005265: ' + e.message };
         }
     },
-    CHK0001278: function() {
+    CHK0005266: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var ga = new GlideAggregate('sys_script');
@@ -471,10 +441,10 @@ AROPCheckLibrary_SPM.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001278: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005266: ' + e.message };
         }
     },
-    CHK0001279: function() {
+    CHK0005267: function() {
         try {
             return ((function(checkDef, dateFilter) {
     // rm_story = user stories (OOB SPM agile table)
@@ -514,7 +484,7 @@ AROPCheckLibrary_SPM.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001279: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005267: ' + e.message };
         }
     },
     type: 'AROPCheckLibrary_SPM'
@@ -523,13 +493,13 @@ AROPCheckLibrary_SPM.prototype = {
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2026-05-21 05:02:31</sys_created_on>
         <sys_id>e492cae0cfc5c3548935fb251d851c78</sys_id>
-        <sys_mod_count>3</sys_mod_count>
+        <sys_mod_count>6</sys_mod_count>
         <sys_name>AROPCheckLibrary_SPM</sys_name>
         <sys_package display_value="ServiceNow AI Readiness Optimization Platform" source="x_snc_airop">73e2562fcf244b908935fb251d851c78</sys_package>
         <sys_policy/>
         <sys_scope display_value="ServiceNow AI Readiness Optimization Platform">73e2562fcf244b908935fb251d851c78</sys_scope>
         <sys_update_name>sys_script_include_e492cae0cfc5c3548935fb251d851c78</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2026-06-02 09:00:27</sys_updated_on>
+        <sys_updated_on>2026-06-08 16:10:54</sys_updated_on>
     </sys_script_include>
 </record_update>

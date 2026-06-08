@@ -14,8 +14,7 @@ AROPCheckLibrary_GRC.prototype = {
     initialize: function() {},
     _count: function(table, query) { var gr = new GlideRecord(table); if (query) gr.addEncodedQuery(query); gr.query(); return gr.getRowCount(); },
     _pct: function(num, den) { return den > 0 ? Math.round((num/den)*100) : 0; },
-    _daysAgo: function(field, days) { var d = new GlideDateTime(); d.addDaysUTC(-days); return field + '<' + d.getValue(); },
-    CHK0001107: function() {
+    CHK0005084: function() {
         try {
             return (function(checkDef, dateFilter) {
     var checkPlugin = (function checkPlugin(storeScope, pluginSource) {    var result = { found: false, version: "", table: "" };    try {        var saGR = new GlideRecord("sys_store_app");        saGR.addQuery("scope", storeScope);        saGR.setLimit(1);        saGR.query();        if (saGR.next()) {            result.found = true;            result.version = saGR.getValue("version") || "";            result.table = "sys_store_app";            return result;        }    } catch(e1) {}    if (pluginSource) {        try {            var spGR = new GlideRecord("sys_plugins");            spGR.addQuery("source", pluginSource);            spGR.addQuery("active", true);            spGR.setLimit(1);            spGR.query();            if (spGR.next()) {                result.found = true;                result.version = spGR.getValue("version") || "";                result.table = "sys_plugins";                return result;            }        } catch(e2) {}    }    return result;});
@@ -35,51 +34,44 @@ AROPCheckLibrary_GRC.prototype = {
     }
 })();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001107: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005084: ' + e.message };
         }
     },
-    CHK0001108: function() {
+    CHK0005085: function() {
         try {
-            return ((function(checkDef, dateFilter) {
-    var gaPolicy = new GlideAggregate('sn_policy_policy');
-    gaPolicy.addQuery('active', true);
-    gaPolicy.addAggregate('COUNT');
-    gaPolicy.query();
-    var policies = gaPolicy.next() ? parseInt(gaPolicy.getAggregate('COUNT')) : 0;
-
-    var gaControl = new GlideAggregate('sn_compliance_control');
-    gaControl.addQuery('active', true);
-    gaControl.addAggregate('COUNT');
-    gaControl.query();
-    var controls = gaControl.next() ? parseInt(gaControl.getAggregate('COUNT')) : 0;
-
-    var actualValue = policies + ' active policies | ' + controls + ' active controls';
-
-    if (policies >= 10 && controls >= 50) {
-        return {
-            status: 'ready',
-            actualValue: actualValue,
-            finding: 'Good GRC data foundation — Now Assist can perform AI-assisted compliance assessment across ' + policies + ' policies and ' + controls + ' controls.'
-        };
-    } else if (policies >= 5 || controls >= 20) {
-        return {
-            status: 'needs_attention',
-            actualValue: actualValue,
-            finding: 'Partial GRC data (' + policies + ' policies, ' + controls + ' controls). Now Assist GRC AI assessment will have limited coverage. Target: 10+ policies, 50+ controls.'
-        };
-    } else {
-        return {
-            status: 'not_ready',
-            actualValue: actualValue,
-            finding: 'Insufficient GRC data (' + policies + ' policies, ' + controls + ' controls). Now Assist GRC AI assessment requires a comprehensive policy and control foundation.'
-        };
+            return (function() {
+    var policyTable = new GlideRecord("sn_compliance_policy");
+    if (!policyTable.isValid()) {
+        return { status: "value_blocker", actualValue: "Required table sn_compliance_policy not found", finding: "Compliance Policy table (sn_compliance_policy) is not available. Verify the Policy and Compliance plugin is active." };
     }
-}))();
+    var gaPolicy = new GlideAggregate("sn_compliance_policy");
+    gaPolicy.addQuery("active", true);
+    gaPolicy.addAggregate("COUNT");
+    gaPolicy.query();
+    var policies = gaPolicy.next() ? parseInt(gaPolicy.getAggregate("COUNT")) : 0;
+    var controls = 0;
+    var controlTable = new GlideRecord("sn_compliance_control");
+    if (controlTable.isValid()) {
+        var gaControl = new GlideAggregate("sn_compliance_control");
+        gaControl.addQuery("active", true);
+        gaControl.addAggregate("COUNT");
+        gaControl.query();
+        controls = gaControl.next() ? parseInt(gaControl.getAggregate("COUNT")) : 0;
+    }
+    var actualValue = policies + " active policies | " + controls + " active controls";
+    if (policies >= 10 && controls >= 50) {
+        return { status: "ready", actualValue: actualValue, finding: "Good GRC data foundation — Now Assist can perform AI-assisted compliance assessment across " + policies + " policies and " + controls + " controls." };
+    } else if (policies >= 5 || controls >= 20) {
+        return { status: "needs_attention", actualValue: actualValue, finding: "Partial GRC data (" + policies + " policies, " + controls + " controls). Now Assist GRC AI assessment will have limited coverage. Target: 10+ policies, 50+ controls." };
+    } else {
+        return { status: "value_blocker", actualValue: actualValue, finding: "Insufficient GRC data (" + policies + " policies, " + controls + " controls). Now Assist GRC AI assessment requires a comprehensive policy and control foundation." };
+    }
+})();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001108: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005085: ' + e.message };
         }
     },
-    CHK0001109: function() {
+    CHK0005086: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var ga = new GlideAggregate('sn_risk_risk');
@@ -111,49 +103,39 @@ AROPCheckLibrary_GRC.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001109: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005086: ' + e.message };
         }
     },
-    CHK0001110: function() {
+    CHK0005087: function() {
         try {
-            return ((function(checkDef, dateFilter) {
-    var ga = new GlideAggregate('sn_compliance_attestation_task');
-    ga.addQuery('active', true);
-    ga.addAggregate('COUNT');
-    ga.query();
-    var count = ga.next() ? parseInt(ga.getAggregate('COUNT')) : 0;
-
-    var actualValue = count + ' active attestation tasks';
-
-    if (count >= 10) {
-        return {
-            status: 'ready',
-            actualValue: actualValue,
-            finding: count + ' active attestation tasks — Now Assist GRC has active workflow history for AI-assisted compliance verification.'
-        };
-    } else if (count >= 3) {
-        return {
-            status: 'needs_attention',
-            actualValue: actualValue,
-            finding: 'Only ' + count + ' active attestation tasks (target: 10+). Now Assist GRC automated evidence collection will have limited workflow coverage.'
-        };
-    } else {
-        return {
-            status: 'not_ready',
-            actualValue: actualValue,
-            finding: 'Only ' + count + ' active attestation tasks. Now Assist GRC AI automated evidence collection requires active attestation workflows.'
-        };
+            return (function() {
+    var t = new GlideRecord("asmt_assessment_instance");
+    if (!t.isValid()) {
+        return { status: "value_blocker", actualValue: "Required table asmt_assessment_instance not found", finding: "Assessment Instance table is not available. Verify the Assessments plugin is active." };
     }
-}))();
+    var ga = new GlideAggregate("asmt_assessment_instance");
+    ga.addQuery("state", "in_progress");
+    ga.addAggregate("COUNT");
+    ga.query();
+    var count = ga.next() ? parseInt(ga.getAggregate("COUNT")) : 0;
+    var actualValue = count + " active attestation instances";
+    if (count >= 10) {
+        return { status: "ready", actualValue: actualValue, finding: count + " active attestation instances — Now Assist GRC has active workflow history for AI-assisted compliance verification." };
+    } else if (count >= 3) {
+        return { status: "needs_attention", actualValue: actualValue, finding: "Only " + count + " active attestation instances (target: 10+). Now Assist GRC automated evidence collection will have limited workflow coverage." };
+    } else {
+        return { status: "value_blocker", actualValue: actualValue, finding: "Only " + count + " active attestation instances. Now Assist GRC AI automated evidence collection requires active attestation workflows." };
+    }
+})();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001110: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005087: ' + e.message };
         }
     },
-    CHK0001099: function() {
+    CHK0005088: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var cutoff = new GlideDateTime();
-    cutoff.addYears(-1);
+    cutoff.addYearsUTC(-1);
 
     var gaTotal = new GlideAggregate('sn_compliance_test_result');
     gaTotal.addQuery('sys_created_on', '>=', cutoff.getValue());
@@ -200,10 +182,10 @@ AROPCheckLibrary_GRC.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001099: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005088: ' + e.message };
         }
     },
-    CHK0001100: function() {
+    CHK0005089: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var ga = new GlideAggregate('sn_compliance_authority_document');
@@ -235,45 +217,35 @@ AROPCheckLibrary_GRC.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001100: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005089: ' + e.message };
         }
     },
-    CHK0001101: function() {
+    CHK0005090: function() {
         try {
-            return ((function(checkDef, dateFilter) {
-    var ga = new GlideAggregate('sn_compliance_issue');
-    ga.addQuery('active', true);
-    ga.addAggregate('COUNT');
-    ga.query();
-    var count = ga.next() ? parseInt(ga.getAggregate('COUNT')) : 0;
-
-    var actualValue = count + ' active GRC issues';
-
-    if (count >= 10) {
-        return {
-            status: 'ready',
-            actualValue: actualValue,
-            finding: count + ' active GRC issues being tracked — Now Assist GRC has remediation context for AI risk prioritization.'
-        };
-    } else if (count >= 3) {
-        return {
-            status: 'needs_attention',
-            actualValue: actualValue,
-            finding: 'Only ' + count + ' active GRC issues (target: 10+). Now Assist GRC risk prioritization recommendations will have limited issue context.'
-        };
-    } else {
-        return {
-            status: 'not_ready',
-            actualValue: actualValue,
-            finding: 'Only ' + count + ' active GRC issues tracked. Now Assist GRC uses active issue history for AI risk prioritization and remediation recommendations.'
-        };
+            return (function() {
+    var t = new GlideRecord("sn_grc_issue");
+    if (!t.isValid()) {
+        return { status: "value_blocker", actualValue: "Required table sn_grc_issue not found", finding: "GRC Issue table (sn_grc_issue) is not available. Verify the GRC plugin is active." };
     }
-}))();
+    var ga = new GlideAggregate("sn_grc_issue");
+    ga.addQuery("active", true);
+    ga.addAggregate("COUNT");
+    ga.query();
+    var count = ga.next() ? parseInt(ga.getAggregate("COUNT")) : 0;
+    var actualValue = count + " active GRC issues";
+    if (count >= 10) {
+        return { status: "ready", actualValue: actualValue, finding: count + " active GRC issues being tracked — Now Assist GRC has remediation context for AI risk prioritization." };
+    } else if (count >= 3) {
+        return { status: "needs_attention", actualValue: actualValue, finding: "Only " + count + " active GRC issues (target: 10+). Now Assist GRC risk prioritization recommendations will have limited issue context." };
+    } else {
+        return { status: "value_blocker", actualValue: actualValue, finding: "Only " + count + " active GRC issues tracked. Now Assist GRC uses active issue history for AI risk prioritization and remediation recommendations." };
+    }
+})();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001101: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005090: ' + e.message };
         }
     },
-    CHK0001102: function() {
+    CHK0005091: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var ga = new GlideAggregate('sn_audit_engagement');
@@ -305,10 +277,10 @@ AROPCheckLibrary_GRC.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001102: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005091: ' + e.message };
         }
     },
-    CHK0001103: function() {
+    CHK0005092: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var gaTotal = new GlideAggregate('sn_risk_risk');
@@ -356,10 +328,10 @@ AROPCheckLibrary_GRC.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001103: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005092: ' + e.message };
         }
     },
-    CHK0001104: function() {
+    CHK0005093: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var ga = new GlideAggregate('sys_script');
@@ -393,45 +365,34 @@ AROPCheckLibrary_GRC.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001104: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005093: ' + e.message };
         }
     },
-    CHK0001105: function() {
+    CHK0005094: function() {
         try {
-            return ((function(checkDef, dateFilter) {
-    var ga = new GlideAggregate('sn_vendor_risk_vendor');
-    ga.addQuery('active', true);
-    ga.addAggregate('COUNT');
-    ga.query();
-    var count = ga.next() ? parseInt(ga.getAggregate('COUNT')) : 0;
-
-    var actualValue = count + ' active vendor risk assessments';
-
-    if (count >= 10) {
-        return {
-            status: 'ready',
-            actualValue: actualValue,
-            finding: count + ' vendor assessments — Now Assist GRC has sufficient vendor context for AI supply chain risk analysis.'
-        };
-    } else if (count >= 3) {
-        return {
-            status: 'needs_attention',
-            actualValue: actualValue,
-            finding: 'Only ' + count + ' vendor risk assessments (target: 10+). Now Assist GRC supply chain risk recommendations will have limited vendor coverage.'
-        };
-    } else {
-        return {
-            status: 'not_ready',
-            actualValue: actualValue,
-            finding: 'Only ' + count + ' vendor risk assessments. Now Assist GRC uses vendor data for AI supply chain risk recommendations — insufficient data for meaningful analysis.'
-        };
+            return (function() {
+    var t = new GlideRecord("sn_vdr_risk_asmt_vdr_tiering_assessment");
+    if (!t.isValid()) {
+        return { status: "value_blocker", actualValue: "Required table sn_vdr_risk_asmt_vdr_tiering_assessment not found", finding: "TPRM Vendor Tiering Assessment table is not available. Verify the Vendor Risk Management plugin is active." };
     }
-}))();
+    var ga = new GlideAggregate("sn_vdr_risk_asmt_vdr_tiering_assessment");
+    ga.addAggregate("COUNT");
+    ga.query();
+    var count = ga.next() ? parseInt(ga.getAggregate("COUNT")) : 0;
+    var actualValue = count + " vendor tiering assessments";
+    if (count >= 10) {
+        return { status: "ready", actualValue: actualValue, finding: count + " vendor tiering assessments — Now Assist GRC has sufficient vendor context for AI supply chain risk analysis." };
+    } else if (count >= 3) {
+        return { status: "needs_attention", actualValue: actualValue, finding: "Only " + count + " vendor tiering assessments (target: 10+). Now Assist GRC supply chain risk recommendations will have limited vendor coverage." };
+    } else {
+        return { status: "value_blocker", actualValue: actualValue, finding: "Only " + count + " vendor tiering assessments. Now Assist GRC uses vendor data for AI supply chain risk recommendations — insufficient data for meaningful analysis." };
+    }
+})();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001105: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005094: ' + e.message };
         }
     },
-    CHK0001106: function() {
+    CHK0005095: function() {
         try {
             return ((function(checkDef, dateFilter) {
     // Use separate queries per keyword to avoid OR precedence issues
@@ -477,7 +438,7 @@ AROPCheckLibrary_GRC.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001106: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005095: ' + e.message };
         }
     },
     type: 'AROPCheckLibrary_GRC'
@@ -486,13 +447,13 @@ AROPCheckLibrary_GRC.prototype = {
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2026-05-21 05:02:28</sys_created_on>
         <sys_id>bf82cae0cfc5c3548935fb251d851c72</sys_id>
-        <sys_mod_count>3</sys_mod_count>
+        <sys_mod_count>6</sys_mod_count>
         <sys_name>AROPCheckLibrary_GRC</sys_name>
         <sys_package display_value="ServiceNow AI Readiness Optimization Platform" source="x_snc_airop">73e2562fcf244b908935fb251d851c78</sys_package>
         <sys_policy/>
         <sys_scope display_value="ServiceNow AI Readiness Optimization Platform">73e2562fcf244b908935fb251d851c78</sys_scope>
         <sys_update_name>sys_script_include_bf82cae0cfc5c3548935fb251d851c72</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2026-06-02 09:00:27</sys_updated_on>
+        <sys_updated_on>2026-06-08 16:10:54</sys_updated_on>
     </sys_script_include>
 </record_update>

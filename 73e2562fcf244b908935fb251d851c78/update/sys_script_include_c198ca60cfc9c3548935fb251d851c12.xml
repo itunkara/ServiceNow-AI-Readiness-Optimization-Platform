@@ -14,8 +14,7 @@ AROPCheckLibrary_ITOM.prototype = {
     initialize: function() {},
     _count: function(table, query) { var gr = new GlideRecord(table); if (query) gr.addEncodedQuery(query); gr.query(); return gr.getRowCount(); },
     _pct: function(num, den) { return den > 0 ? Math.round((num/den)*100) : 0; },
-    _daysAgo: function(field, days) { var d = new GlideDateTime(); d.addDaysUTC(-days); return field + '<' + d.getValue(); },
-    CHK0001155: function() {
+    CHK0005136: function() {
         try {
             return (function(checkDef, dateFilter) {
     var checkPlugin = (function checkPlugin(storeScope, pluginSource) {    var result = { found: false, version: "", table: "" };    try {        var saGR = new GlideRecord("sys_store_app");        saGR.addQuery("scope", storeScope);        saGR.setLimit(1);        saGR.query();        if (saGR.next()) {            result.found = true;            result.version = saGR.getValue("version") || "";            result.table = "sys_store_app";            return result;        }    } catch(e1) {}    if (pluginSource) {        try {            var spGR = new GlideRecord("sys_plugins");            spGR.addQuery("source", pluginSource);            spGR.addQuery("active", true);            spGR.setLimit(1);            spGR.query();            if (spGR.next()) {                result.found = true;                result.version = spGR.getValue("version") || "";                result.table = "sys_plugins";                return result;            }        } catch(e2) {}    }    return result;});
@@ -43,10 +42,10 @@ AROPCheckLibrary_ITOM.prototype = {
     }
 })();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001155: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005136: ' + e.message };
         }
     },
-    CHK0001158: function() {
+    CHK0005137: function() {
         try {
             return (function(checkDef, dateFilter) {
     // Probe sys_choice for the backend value of the Completed state
@@ -113,10 +112,10 @@ AROPCheckLibrary_ITOM.prototype = {
     }
 })();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001158: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005137: ' + e.message };
         }
     },
-    CHK0001162: function() {
+    CHK0005138: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var ga = new GlideAggregate('discovery_range');
@@ -147,10 +146,10 @@ AROPCheckLibrary_ITOM.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001162: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005138: ' + e.message };
         }
     },
-    CHK0001166: function() {
+    CHK0005139: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var gaTotal = new GlideAggregate('cmdb_ci');
@@ -199,10 +198,10 @@ AROPCheckLibrary_ITOM.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001166: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005139: ' + e.message };
         }
     },
-    CHK0001151: function() {
+    CHK0005140: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var cutoff = new GlideDateTime();
@@ -253,45 +252,35 @@ AROPCheckLibrary_ITOM.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001151: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005140: ' + e.message };
         }
     },
-    CHK0001160: function() {
+    CHK0005141: function() {
         try {
-            return ((function(checkDef, dateFilter) {
-    var ga = new GlideAggregate('discovery_credential');
-    ga.addQuery('active', true);
-    ga.addAggregate('COUNT');
-    ga.query();
-    var count = ga.next() ? parseInt(ga.getAggregate('COUNT')) : 0;
-
-    var actualValue = count + ' active discovery credentials configured';
-
-    if (count >= 5) {
-        return {
-            status: 'ready',
-            actualValue: actualValue,
-            finding: count + ' active discovery credentials. Now Assist ITOM has broad authenticated access to infrastructure for current CI data.'
-        };
-    } else if (count >= 1) {
-        return {
-            status: 'needs_attention',
-            actualValue: actualValue,
-            finding: 'Only ' + count + ' active discovery credential(s) (target: 5+). Missing credentials mean some CI classes are not being discovered — Now Assist ITOM will have partial infrastructure context.'
-        };
-    } else {
-        return {
-            status: 'not_ready',
-            actualValue: actualValue,
-            finding: 'No active discovery credentials configured. Without credentials, discovery cannot authenticate to infrastructure targets — Now Assist ITOM will have no reliable CI data.'
-        };
+            return (function() {
+    var t = new GlideRecord("discovery_credentials");
+    if (!t.isValid()) {
+        return { status: "value_blocker", actualValue: "Required table discovery_credentials not found", finding: "Discovery Credentials table (discovery_credentials) is not available. Verify the Discovery plugin is active." };
     }
-}))();
+    var ga = new GlideAggregate("discovery_credentials");
+    ga.addQuery("active", true);
+    ga.addAggregate("COUNT");
+    ga.query();
+    var count = ga.next() ? parseInt(ga.getAggregate("COUNT")) : 0;
+    var actualValue = count + " active discovery credentials configured";
+    if (count >= 5) {
+        return { status: "ready", actualValue: actualValue, finding: count + " active discovery credentials. Now Assist ITOM has broad authenticated access to infrastructure for current CI data." };
+    } else if (count >= 1) {
+        return { status: "needs_attention", actualValue: actualValue, finding: "Only " + count + " active discovery credential(s) (target: 5+). Missing credentials mean some CI classes are not being discovered — Now Assist ITOM will have partial infrastructure context." };
+    } else {
+        return { status: "value_blocker", actualValue: actualValue, finding: "No active discovery credentials configured. Without credentials, discovery cannot authenticate to infrastructure targets — Now Assist ITOM will have no reliable CI data." };
+    }
+})();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001160: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005141: ' + e.message };
         }
     },
-    CHK0001164: function() {
+    CHK0005142: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var cutoff = new GlideDateTime();
@@ -332,10 +321,10 @@ AROPCheckLibrary_ITOM.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001164: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005142: ' + e.message };
         }
     },
-    CHK0001168: function() {
+    CHK0005143: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var cutoff = new GlideDateTime();
@@ -386,10 +375,10 @@ AROPCheckLibrary_ITOM.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001168: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005143: ' + e.message };
         }
     },
-    CHK0001152: function() {
+    CHK0005144: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var ga = new GlideAggregate('em_alert_correlation_rule');
@@ -421,10 +410,10 @@ AROPCheckLibrary_ITOM.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001152: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005144: ' + e.message };
         }
     },
-    CHK0001156: function() {
+    CHK0005145: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var cutoff = new GlideDateTime();
@@ -475,10 +464,10 @@ AROPCheckLibrary_ITOM.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001156: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005145: ' + e.message };
         }
     },
-    CHK0001165: function() {
+    CHK0005146: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var ga = new GlideAggregate('cmdb_ci_query_based_service');
@@ -509,10 +498,10 @@ AROPCheckLibrary_ITOM.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001165: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005146: ' + e.message };
         }
     },
-    CHK0001169: function() {
+    CHK0005147: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var gaTotal = new GlideAggregate('cmdb_ci_service');
@@ -551,10 +540,10 @@ AROPCheckLibrary_ITOM.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001169: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005147: ' + e.message };
         }
     },
-    CHK0001157: function() {
+    CHK0005148: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var ga = new GlideAggregate('sa_pattern');
@@ -586,10 +575,10 @@ AROPCheckLibrary_ITOM.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001157: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005148: ' + e.message };
         }
     },
-    CHK0001161: function() {
+    CHK0005149: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var ga = new GlideAggregate('svc_ci_assoc');
@@ -620,48 +609,38 @@ AROPCheckLibrary_ITOM.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001161: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005149: ' + e.message };
         }
     },
-    CHK0001170: function() {
+    CHK0005150: function() {
         try {
-            return ((function(checkDef, dateFilter) {
+            return (function() {
+    var t = new GlideRecord("samp_sw_license_metric");
+    if (!t.isValid()) {
+        return { status: "value_blocker", actualValue: "Required table samp_sw_license_metric not found", finding: "License Metric table is not available. Verify the SAM plugin is active." };
+    }
     var matched = {};
-
     function collectMatches(keyword) {
-        var gr = new GlideRecord('license_metric');
-        gr.addQuery('name', 'CONTAINS', keyword);
+        var gr = new GlideRecord("samp_sw_license_metric");
+        gr.addQuery("name", "CONTAINS", keyword);
         gr.query();
-        while (gr.next()) {
-            matched[gr.getUniqueValue()] = true;
-        }
+        while (gr.next()) { matched[gr.getUniqueValue()] = true; }
     }
-
-    collectMatches('itom');
-    collectMatches('ITOM');
-
+    collectMatches("itom");
+    collectMatches("ITOM");
     var count = Object.keys(matched).length;
-    var actualValue = count + ' ITOM license metric records found';
-
+    var actualValue = count + " ITOM license metric records found";
     if (count > 0) {
-        return {
-            status: 'ready',
-            actualValue: actualValue,
-            finding: count + ' ITOM license metric record(s) found. ITOM entitlement appears active — manual confirmation with account team recommended.'
-        };
+        return { status: "ready", actualValue: actualValue, finding: count + " ITOM license metric record(s) found. ITOM entitlement appears active — manual confirmation with account team recommended." };
     } else {
-        return {
-            status: 'needs_attention',
-            actualValue: actualValue,
-            finding: 'No ITOM license metric records found. Manual entitlement confirmation recommended — without the correct ITOM SKU, Now Assist ITOM capabilities will not activate regardless of plugin installation or data quality.'
-        };
+        return { status: "needs_attention", actualValue: actualValue, finding: "No ITOM license metric records found. Manual entitlement confirmation recommended — without the correct ITOM SKU, Now Assist ITOM capabilities will not activate regardless of plugin installation or data quality." };
     }
-}))();
+})();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001170: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005150: ' + e.message };
         }
     },
-    CHK0001154: function() {
+    CHK0005151: function() {
         try {
             return (function(checkDef, dateFilter) {
     var checkPlugin = (function checkPlugin(storeScope, pluginSource) {    var result = { found: false, version: "", table: "" };    try {        var saGR = new GlideRecord("sys_store_app");        saGR.addQuery("scope", storeScope);        saGR.setLimit(1);        saGR.query();        if (saGR.next()) {            result.found = true;            result.version = saGR.getValue("version") || "";            result.table = "sys_store_app";            return result;        }    } catch(e1) {}    if (pluginSource) {        try {            var spGR = new GlideRecord("sys_plugins");            spGR.addQuery("source", pluginSource);            spGR.addQuery("active", true);            spGR.setLimit(1);            spGR.query();            if (spGR.next()) {                result.found = true;                result.version = spGR.getValue("version") || "";                result.table = "sys_plugins";                return result;            }        } catch(e2) {}    }    return result;});
@@ -681,10 +660,10 @@ AROPCheckLibrary_ITOM.prototype = {
     }
 })();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001154: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005151: ' + e.message };
         }
     },
-    CHK0001159: function() {
+    CHK0005152: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var ga = new GlideAggregate('cmn_schedule_maintenance');
@@ -716,10 +695,10 @@ AROPCheckLibrary_ITOM.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001159: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005152: ' + e.message };
         }
     },
-    CHK0001163: function() {
+    CHK0005153: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var gaTotal = new GlideAggregate('ecc_agent');
@@ -759,10 +738,10 @@ AROPCheckLibrary_ITOM.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001163: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005153: ' + e.message };
         }
     },
-    CHK0001167: function() {
+    CHK0005154: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var cutoff = new GlideDateTime();
@@ -822,7 +801,7 @@ AROPCheckLibrary_ITOM.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001167: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005154: ' + e.message };
         }
     },
     type: 'AROPCheckLibrary_ITOM'
@@ -831,13 +810,13 @@ AROPCheckLibrary_ITOM.prototype = {
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2026-05-21 05:28:46</sys_created_on>
         <sys_id>c198ca60cfc9c3548935fb251d851c12</sys_id>
-        <sys_mod_count>4</sys_mod_count>
+        <sys_mod_count>7</sys_mod_count>
         <sys_name>AROPCheckLibrary_ITOM</sys_name>
         <sys_package display_value="ServiceNow AI Readiness Optimization Platform" source="x_snc_airop">73e2562fcf244b908935fb251d851c78</sys_package>
         <sys_policy/>
         <sys_scope display_value="ServiceNow AI Readiness Optimization Platform">73e2562fcf244b908935fb251d851c78</sys_scope>
         <sys_update_name>sys_script_include_c198ca60cfc9c3548935fb251d851c12</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2026-06-02 09:00:27</sys_updated_on>
+        <sys_updated_on>2026-06-08 16:10:53</sys_updated_on>
     </sys_script_include>
 </record_update>

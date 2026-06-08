@@ -14,8 +14,7 @@ AROPCheckLibrary_FIELD_SERVICE.prototype = {
     initialize: function() {},
     _count: function(table, query) { var gr = new GlideRecord(table); if (query) gr.addEncodedQuery(query); gr.query(); return gr.getRowCount(); },
     _pct: function(num, den) { return den > 0 ? Math.round((num/den)*100) : 0; },
-    _daysAgo: function(field, days) { var d = new GlideDateTime(); d.addDaysUTC(-days); return field + '<' + d.getValue(); },
-    CHK0001086: function() {
+    CHK0005069: function() {
         try {
             return (function(checkDef, dateFilter) {
     var checkPlugin = (function checkPlugin(storeScope, pluginSource) {    var result = { found: false, version: "", table: "" };    try {        var saGR = new GlideRecord("sys_store_app");        saGR.addQuery("scope", storeScope);        saGR.setLimit(1);        saGR.query();        if (saGR.next()) {            result.found = true;            result.version = saGR.getValue("version") || "";            result.table = "sys_store_app";            return result;        }    } catch(e1) {}    if (pluginSource) {        try {            var spGR = new GlideRecord("sys_plugins");            spGR.addQuery("source", pluginSource);            spGR.addQuery("active", true);            spGR.setLimit(1);            spGR.query();            if (spGR.next()) {                result.found = true;                result.version = spGR.getValue("version") || "";                result.table = "sys_plugins";                return result;            }        } catch(e2) {}    }    return result;});
@@ -35,14 +34,14 @@ AROPCheckLibrary_FIELD_SERVICE.prototype = {
     }
 })();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001086: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005069: ' + e.message };
         }
     },
-    CHK0001084: function() {
+    CHK0005070: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var cutoff = new GlideDateTime();
-    cutoff.addYears(-1);
+    cutoff.addYearsUTC(-1);
 
     var ga = new GlideAggregate('wm_order');
     ga.addQuery('sys_created_on', '>=', cutoff.getValue());
@@ -73,90 +72,73 @@ AROPCheckLibrary_FIELD_SERVICE.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001084: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005070: ' + e.message };
         }
     },
-    CHK0001085: function() {
+    CHK0005071: function() {
         try {
-            return ((function(checkDef, dateFilter) {
-    var gaSkills = new GlideAggregate('wm_skill');
-    gaSkills.addQuery('active', true);
-    gaSkills.addAggregate('COUNT');
+            return (function() {
+    var skillTable = new GlideRecord("cmn_skill");
+    if (!skillTable.isValid()) {
+        return { status: "value_blocker", actualValue: "Required table cmn_skill not found", finding: "Skills table (cmn_skill) is not available on this instance. Verify the Skills plugin is active." };
+    }
+    var gaSkills = new GlideAggregate("cmn_skill");
+    gaSkills.addQuery("active", true);
+    gaSkills.addAggregate("COUNT");
     gaSkills.query();
-    var skills = gaSkills.next() ? parseInt(gaSkills.getAggregate('COUNT')) : 0;
-
-    var gaAssigned = new GlideAggregate('wm_agent_skill');
-    gaAssigned.addAggregate('COUNT');
-    gaAssigned.query();
-    var agentSkills = gaAssigned.next() ? parseInt(gaAssigned.getAggregate('COUNT')) : 0;
-
-    var actualValue = skills + ' skill definitions | ' + agentSkills + ' agent skill assignments';
-
+    var skills = gaSkills.next() ? parseInt(gaSkills.getAggregate("COUNT")) : 0;
+    var agentSkills = 0;
+    var userSkillTable = new GlideRecord("sys_user_has_skill");
+    if (userSkillTable.isValid()) {
+        var gaAssigned = new GlideAggregate("sys_user_has_skill");
+        gaAssigned.addAggregate("COUNT");
+        gaAssigned.query();
+        agentSkills = gaAssigned.next() ? parseInt(gaAssigned.getAggregate("COUNT")) : 0;
+    }
+    var actualValue = skills + " skill definitions | " + agentSkills + " agent skill assignments";
     if (skills >= 10 && agentSkills >= 20) {
-        return {
-            status: 'ready',
-            actualValue: actualValue,
-            finding: skills + ' skills with ' + agentSkills + ' agent assignments. Now Assist FSM has comprehensive skills data for competency-matched AI dispatch.'
-        };
+        return { status: "ready", actualValue: actualValue, finding: skills + " skills with " + agentSkills + " agent assignments. Now Assist FSM has comprehensive skills data for competency-matched AI dispatch." };
     } else if (skills >= 3 || agentSkills >= 5) {
-        return {
-            status: 'needs_attention',
-            actualValue: actualValue,
-            finding: 'Partial skills configuration (' + skills + ' skills, ' + agentSkills + ' assignments). Targets: 10+ skills, 20+ assignments. Now Assist FSM skill-based AI dispatch will have limited matching accuracy.'
-        };
+        return { status: "needs_attention", actualValue: actualValue, finding: "Partial skills configuration (" + skills + " skills, " + agentSkills + " assignments). Targets: 10+ skills, 20+ assignments. Now Assist FSM skill-based AI dispatch will have limited matching accuracy." };
     } else {
-        return {
-            status: 'not_ready',
-            actualValue: actualValue,
-            finding: 'Insufficient skills configuration (' + skills + ' skills, ' + agentSkills + ' assignments). Now Assist FSM cannot perform competency-matched AI dispatch without defined skills and agent assignments.'
-        };
+        return { status: "value_blocker", actualValue: actualValue, finding: "Insufficient skills configuration (" + skills + " skills, " + agentSkills + " assignments). Now Assist FSM cannot perform competency-matched AI dispatch without defined skills and agent assignments." };
     }
-}))();
+})();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001085: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005071: ' + e.message };
         }
     },
-    CHK0001094: function() {
+    CHK0005072: function() {
         try {
-            return ((function(checkDef, dateFilter) {
-    var ga = new GlideAggregate('wm_territory');
-    ga.addQuery('active', true);
-    ga.addAggregate('COUNT');
-    ga.query();
-    var count = ga.next() ? parseInt(ga.getAggregate('COUNT')) : 0;
-
-    var actualValue = count + ' active field service territories';
-
-    if (count >= 5) {
-        return {
-            status: 'ready',
-            actualValue: actualValue,
-            finding: count + ' active territories. Now Assist FSM can optimize scheduling within defined geographic coverage areas.'
-        };
-    } else if (count >= 1) {
-        return {
-            status: 'needs_attention',
-            actualValue: actualValue,
-            finding: 'Only ' + count + ' active territory(ies) (target: 5+). Now Assist FSM geographic scheduling optimization will have limited coverage differentiation.'
-        };
-    } else {
-        return {
-            status: 'not_ready',
-            actualValue: actualValue,
-            finding: 'No active territories configured. Now Assist FSM cannot account for geographic zones in AI scheduling — all dispatch will be treated as if location boundaries do not exist.'
-        };
+            return (function() {
+    var t = new GlideRecord("wm_territory");
+    if (!t.isValid()) {
+        return { status: "value_blocker", actualValue: "Required table wm_territory not found", finding: "FSM Territory table (wm_territory) is not available. Verify the Field Service Management plugin is active." };
     }
-}))();
+    var ga = new GlideAggregate("wm_territory");
+    ga.addQuery("active", true);
+    ga.addAggregate("COUNT");
+    ga.query();
+    var count = ga.next() ? parseInt(ga.getAggregate("COUNT")) : 0;
+    var actualValue = count + " active field service territories";
+    if (count >= 5) {
+        return { status: "ready", actualValue: actualValue, finding: count + " active territories. Now Assist FSM can optimize scheduling within defined geographic coverage areas." };
+    } else if (count >= 1) {
+        return { status: "needs_attention", actualValue: actualValue, finding: "Only " + count + " active territory(ies) (target: 5+). Now Assist FSM geographic scheduling optimization will have limited coverage differentiation." };
+    } else {
+        return { status: "value_blocker", actualValue: actualValue, finding: "No active territories configured. Now Assist FSM cannot account for geographic zones in AI scheduling." };
+    }
+})();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001094: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005072: ' + e.message };
         }
     },
-    CHK0001095: function() {
+    CHK0005073: function() {
         try {
             return ((function(checkDef, dateFilter) {
     // wm_order.state is INTEGER: 3=Closed Complete, 4=Closed Incomplete
     var cutoff = new GlideDateTime();
-    cutoff.addYears(-1);
+    cutoff.addYearsUTC(-1);
 
     var gaTotal = new GlideAggregate('wm_order');
     gaTotal.addQuery('state', 'IN', '3,4');
@@ -206,14 +188,14 @@ AROPCheckLibrary_FIELD_SERVICE.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001095: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005073: ' + e.message };
         }
     },
-    CHK0001096: function() {
+    CHK0005074: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var cutoff = new GlideDateTime();
-    cutoff.addYears(-1);
+    cutoff.addYearsUTC(-1);
 
     var gaTotal = new GlideAggregate('wm_order');
     gaTotal.addQuery('state', 'IN', '3,4');
@@ -262,14 +244,14 @@ AROPCheckLibrary_FIELD_SERVICE.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001096: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005074: ' + e.message };
         }
     },
-    CHK0001097: function() {
+    CHK0005075: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var cutoff = new GlideDateTime();
-    cutoff.addYears(-1);
+    cutoff.addYearsUTC(-1);
 
     var gaTotal = new GlideAggregate('wm_order');
     gaTotal.addQuery('state', 'IN', '3,4');
@@ -318,10 +300,10 @@ AROPCheckLibrary_FIELD_SERVICE.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001097: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005075: ' + e.message };
         }
     },
-    CHK0001098: function() {
+    CHK0005076: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var gr = new GlideRecord('sys_scope');
@@ -346,10 +328,10 @@ AROPCheckLibrary_FIELD_SERVICE.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001098: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005076: ' + e.message };
         }
     },
-    CHK0001090: function() {
+    CHK0005077: function() {
         try {
             return ((function(checkDef, dateFilter) {
     // alm_stockroom is the OOB stockroom/inventory table for FSM parts
@@ -382,10 +364,10 @@ AROPCheckLibrary_FIELD_SERVICE.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001090: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005077: ' + e.message };
         }
     },
-    CHK0001091: function() {
+    CHK0005078: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var ga = new GlideAggregate('sla');
@@ -418,10 +400,10 @@ AROPCheckLibrary_FIELD_SERVICE.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001091: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005078: ' + e.message };
         }
     },
-    CHK0001092: function() {
+    CHK0005079: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var ga = new GlideAggregate('kb_knowledge');
@@ -454,10 +436,10 @@ AROPCheckLibrary_FIELD_SERVICE.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001092: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005079: ' + e.message };
         }
     },
-    CHK0001093: function() {
+    CHK0005080: function() {
         try {
             return ((function(checkDef, dateFilter) {
     // Query sys_user_has_role for FSM agent roles — more reliable than
@@ -502,51 +484,41 @@ AROPCheckLibrary_FIELD_SERVICE.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001093: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005080: ' + e.message };
         }
     },
-    CHK0001087: function() {
+    CHK0005081: function() {
         try {
-            return ((function(checkDef, dateFilter) {
-    var ga = new GlideAggregate('wm_schedule_window');
-    ga.addQuery('active', true);
-    ga.addAggregate('COUNT');
-    ga.query();
-    var count = ga.next() ? parseInt(ga.getAggregate('COUNT')) : 0;
-
-    var actualValue = count + ' active scheduling windows';
-
-    if (count >= 5) {
-        return {
-            status: 'ready',
-            actualValue: actualValue,
-            finding: count + ' active scheduling windows. Now Assist FSM can optimize AI dispatch within defined time constraints and availability windows.'
-        };
-    } else if (count >= 1) {
-        return {
-            status: 'needs_attention',
-            actualValue: actualValue,
-            finding: 'Only ' + count + ' active scheduling window(s) (target: 5+). Now Assist FSM scheduling optimization will have limited time constraint coverage.'
-        };
-    } else {
-        return {
-            status: 'not_ready',
-            actualValue: actualValue,
-            finding: 'No active scheduling windows configured. Now Assist FSM cannot account for agent availability constraints in AI dispatch optimization.'
-        };
+            return (function() {
+    var t = new GlideRecord("wm_schedule_window");
+    if (!t.isValid()) {
+        return { status: "value_blocker", actualValue: "Required table wm_schedule_window not found", finding: "FSM Scheduling Window table (wm_schedule_window) is not available. Verify the Field Service Management plugin is active." };
     }
-}))();
+    var ga = new GlideAggregate("wm_schedule_window");
+    ga.addQuery("active", true);
+    ga.addAggregate("COUNT");
+    ga.query();
+    var count = ga.next() ? parseInt(ga.getAggregate("COUNT")) : 0;
+    var actualValue = count + " active scheduling windows";
+    if (count >= 5) {
+        return { status: "ready", actualValue: actualValue, finding: count + " active scheduling windows. Now Assist FSM can optimize AI dispatch within defined time constraints and availability windows." };
+    } else if (count >= 1) {
+        return { status: "needs_attention", actualValue: actualValue, finding: "Only " + count + " active scheduling window(s) (target: 5+). Now Assist FSM scheduling optimization will have limited time constraint coverage." };
+    } else {
+        return { status: "value_blocker", actualValue: actualValue, finding: "No active scheduling windows configured. Now Assist FSM cannot account for agent availability constraints in AI dispatch optimization." };
+    }
+})();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001087: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005081: ' + e.message };
         }
     },
-    CHK0001088: function() {
+    CHK0005082: function() {
         try {
             return ((function(checkDef, dateFilter) {
     // 24-month window for PM data — PM cycles are typically quarterly/annual
     // so 12 months may be too narrow to capture full PM history
     var cutoff = new GlideDateTime();
-    cutoff.addYears(-2);
+    cutoff.addYearsUTC(-2);
 
     var ga = new GlideAggregate('wm_order');
     ga.addQuery('type', 'preventive');
@@ -579,10 +551,10 @@ AROPCheckLibrary_FIELD_SERVICE.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001088: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005082: ' + e.message };
         }
     },
-    CHK0001089: function() {
+    CHK0005083: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var ga = new GlideAggregate('sys_script');
@@ -616,7 +588,7 @@ AROPCheckLibrary_FIELD_SERVICE.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001089: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005083: ' + e.message };
         }
     },
     type: 'AROPCheckLibrary_FIELD_SERVICE'
@@ -625,13 +597,13 @@ AROPCheckLibrary_FIELD_SERVICE.prototype = {
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2026-05-21 05:02:22</sys_created_on>
         <sys_id>16828ae0cfc5c3548935fb251d851c3d</sys_id>
-        <sys_mod_count>3</sys_mod_count>
+        <sys_mod_count>6</sys_mod_count>
         <sys_name>AROPCheckLibrary_FIELD_SERVICE</sys_name>
         <sys_package display_value="ServiceNow AI Readiness Optimization Platform" source="x_snc_airop">73e2562fcf244b908935fb251d851c78</sys_package>
         <sys_policy/>
         <sys_scope display_value="ServiceNow AI Readiness Optimization Platform">73e2562fcf244b908935fb251d851c78</sys_scope>
         <sys_update_name>sys_script_include_16828ae0cfc5c3548935fb251d851c3d</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2026-06-02 09:00:27</sys_updated_on>
+        <sys_updated_on>2026-06-08 16:10:53</sys_updated_on>
     </sys_script_include>
 </record_update>

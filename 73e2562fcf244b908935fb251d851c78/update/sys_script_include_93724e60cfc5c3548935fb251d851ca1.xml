@@ -14,8 +14,7 @@ AROPCheckLibrary_ITSM.prototype = {
     initialize: function() {},
     _count: function(table, query) { var gr = new GlideRecord(table); if (query) gr.addEncodedQuery(query); gr.query(); return gr.getRowCount(); },
     _pct: function(num, den) { return den > 0 ? Math.round((num/den)*100) : 0; },
-    _daysAgo: function(field, days) { var d = new GlideDateTime(); d.addDaysUTC(-days); return field + '<' + d.getValue(); },
-    CHK0001175: function() {
+    CHK0005155: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var ga = new GlideAggregate('kb_knowledge');
@@ -48,10 +47,10 @@ AROPCheckLibrary_ITSM.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001175: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005155: ' + e.message };
         }
     },
-    CHK0001204: function() {
+    CHK0005156: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var gaPublished = new GlideAggregate('kb_knowledge');
@@ -104,10 +103,10 @@ AROPCheckLibrary_ITSM.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001204: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005156: ' + e.message };
         }
     },
-    CHK0001176: function() {
+    CHK0005157: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var gaRetired = new GlideAggregate('kb_knowledge');
@@ -132,10 +131,10 @@ AROPCheckLibrary_ITSM.prototype = {
     };
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001176: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005157: ' + e.message };
         }
     },
-    CHK0001184: function() {
+    CHK0005158: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var gaPublished = new GlideAggregate('kb_knowledge');
@@ -185,10 +184,10 @@ AROPCheckLibrary_ITSM.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001184: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005158: ' + e.message };
         }
     },
-    CHK0001191: function() {
+    CHK0005159: function() {
         try {
             return (function(checkDef, dateFilter) {
     var gaTotal = new GlideAggregate("kb_knowledge");
@@ -240,10 +239,10 @@ AROPCheckLibrary_ITSM.prototype = {
     }
 })();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001191: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005159: ' + e.message };
         }
     },
-    CHK0001207: function() {
+    CHK0005160: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var gaTotal = new GlideAggregate('kb_knowledge');
@@ -293,10 +292,10 @@ AROPCheckLibrary_ITSM.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001207: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005160: ' + e.message };
         }
     },
-    CHK0001179: function() {
+    CHK0005161: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var gaTotal = new GlideAggregate('kb_knowledge');
@@ -329,10 +328,10 @@ AROPCheckLibrary_ITSM.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001179: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005161: ' + e.message };
         }
     },
-    CHK0001187: function() {
+    CHK0005162: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var gaTotal = new GlideAggregate('kb_knowledge');
@@ -382,10 +381,10 @@ AROPCheckLibrary_ITSM.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001187: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005162: ' + e.message };
         }
     },
-    CHK0001194: function() {
+    CHK0005163: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var gaTables = new GlideAggregate('kb_knowledge');
@@ -428,14 +427,14 @@ AROPCheckLibrary_ITSM.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001194: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005163: ' + e.message };
         }
     },
-    CHK0001200: function() {
+    CHK0005164: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var cutoff = new GlideDateTime();
-    cutoff.addYears(-1);
+    cutoff.addYearsUTC(-1);
 
     var gaTotal = new GlideAggregate('incident');
     gaTotal.addQuery('state', 'IN', '6,7');
@@ -485,14 +484,14 @@ AROPCheckLibrary_ITSM.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001200: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005164: ' + e.message };
         }
     },
-    CHK0001171: function() {
+    CHK0005165: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var cutoff = new GlideDateTime();
-    cutoff.addYears(-1);
+    cutoff.addYearsUTC(-1);
 
     var total = new GlideAggregate('incident');
     total.addQuery('state', 7);
@@ -546,14 +545,14 @@ AROPCheckLibrary_ITSM.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001171: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005165: ' + e.message };
         }
     },
-    CHK0001189: function() {
+    CHK0005166: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var cutoff = new GlideDateTime();
-    cutoff.addYears(-1);
+    cutoff.addYearsUTC(-1);
 
     var gaTotal = new GlideAggregate('incident');
     gaTotal.addQuery('state', 'IN', '6,7');
@@ -603,14 +602,14 @@ AROPCheckLibrary_ITSM.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001189: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005166: ' + e.message };
         }
     },
-    CHK0001196: function() {
+    CHK0005167: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var cutoff = new GlideDateTime();
-    cutoff.addYears(-1);
+    cutoff.addYearsUTC(-1);
 
     var gaTotal = new GlideAggregate('incident');
     gaTotal.addQuery('state', 'IN', '6,7');
@@ -659,14 +658,14 @@ AROPCheckLibrary_ITSM.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001196: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005167: ' + e.message };
         }
     },
-    CHK0001202: function() {
+    CHK0005168: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var cutoff = new GlideDateTime();
-    cutoff.addYears(-1);
+    cutoff.addYearsUTC(-1);
 
     var ga = new GlideAggregate('incident');
     ga.addQuery('sys_created_on', '>=', cutoff.getValue());
@@ -683,10 +682,10 @@ AROPCheckLibrary_ITSM.prototype = {
     };
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001202: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005168: ' + e.message };
         }
     },
-    CHK0001173: function() {
+    CHK0005169: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var ga = new GlideAggregate('sys_script');
@@ -720,10 +719,10 @@ AROPCheckLibrary_ITSM.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001173: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005169: ' + e.message };
         }
     },
-    CHK0001182: function() {
+    CHK0005170: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var ga = new GlideAggregate('sys_ui_action');
@@ -757,10 +756,10 @@ AROPCheckLibrary_ITSM.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001182: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005170: ' + e.message };
         }
     },
-    CHK0001198: function() {
+    CHK0005171: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var ga = new GlideAggregate('sys_script_client');
@@ -794,10 +793,10 @@ AROPCheckLibrary_ITSM.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001198: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005171: ' + e.message };
         }
     },
-    CHK0001205: function() {
+    CHK0005172: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var ga = new GlideAggregate('sys_dictionary');
@@ -830,10 +829,10 @@ AROPCheckLibrary_ITSM.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001205: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005172: ' + e.message };
         }
     },
-    CHK0001177: function() {
+    CHK0005173: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var ga = new GlideAggregate('sys_dictionary_override');
@@ -865,10 +864,10 @@ AROPCheckLibrary_ITSM.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001177: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005173: ' + e.message };
         }
     },
-    CHK0001185: function() {
+    CHK0005174: function() {
         try {
             return (function(checkDef, dateFilter) {
     var checkPlugin = (function checkPlugin(storeScope, pluginSource) {    var result = { found: false, version: "", table: "" };    try {        var saGR = new GlideRecord("sys_store_app");        saGR.addQuery("scope", storeScope);        saGR.setLimit(1);        saGR.query();        if (saGR.next()) {            result.found = true;            result.version = saGR.getValue("version") || "";            result.table = "sys_store_app";            return result;        }    } catch(e1) {}    if (pluginSource) {        try {            var spGR = new GlideRecord("sys_plugins");            spGR.addQuery("source", pluginSource);            spGR.addQuery("active", true);            spGR.setLimit(1);            spGR.query();            if (spGR.next()) {                result.found = true;                result.version = spGR.getValue("version") || "";                result.table = "sys_plugins";                return result;            }        } catch(e2) {}    }    return result;});
@@ -895,10 +894,10 @@ AROPCheckLibrary_ITSM.prototype = {
     }
 })();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001185: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005174: ' + e.message };
         }
     },
-    CHK0001192: function() {
+    CHK0005175: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var ga = new GlideAggregate('sys_cs_topic');
@@ -931,10 +930,10 @@ AROPCheckLibrary_ITSM.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001192: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005175: ' + e.message };
         }
     },
-    CHK0001208: function() {
+    CHK0005176: function() {
         try {
             return ((function(checkDef, dateFilter) {
     // catalog_item_analytics tracks VA/Now Assist compatibility per catalog item
@@ -997,10 +996,10 @@ AROPCheckLibrary_ITSM.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001208: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005176: ' + e.message };
         }
     },
-    CHK0001180: function() {
+    CHK0005177: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var ga = new GlideAggregate('sys_cs_channel');
@@ -1032,10 +1031,10 @@ AROPCheckLibrary_ITSM.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001180: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005177: ' + e.message };
         }
     },
-    CHK0001188: function() {
+    CHK0005178: function() {
         try {
             return ((function(checkDef, dateFilter) {
     // Filter for platform upgrades only (glide- prefix excludes app installs)
@@ -1083,10 +1082,10 @@ AROPCheckLibrary_ITSM.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001188: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005178: ' + e.message };
         }
     },
-    CHK0001195: function() {
+    CHK0005179: function() {
         try {
             return (function(checkDef, dateFilter) {
     var checkPlugin = (function checkPlugin(storeScope, pluginSource) {    var result = { found: false, version: "", table: "" };    try {        var saGR = new GlideRecord("sys_store_app");        saGR.addQuery("scope", storeScope);        saGR.setLimit(1);        saGR.query();        if (saGR.next()) {            result.found = true;            result.version = saGR.getValue("version") || "";            result.table = "sys_store_app";            return result;        }    } catch(e1) {}    if (pluginSource) {        try {            var spGR = new GlideRecord("sys_plugins");            spGR.addQuery("source", pluginSource);            spGR.addQuery("active", true);            spGR.setLimit(1);            spGR.query();            if (spGR.next()) {                result.found = true;                result.version = spGR.getValue("version") || "";                result.table = "sys_plugins";                return result;            }        } catch(e2) {}    }    return result;});
@@ -1106,10 +1105,10 @@ AROPCheckLibrary_ITSM.prototype = {
     }
 })();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001195: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005179: ' + e.message };
         }
     },
-    CHK0001201: function() {
+    CHK0005180: function() {
         try {
             return (function(checkDef, dateFilter) {
     var checkPlugin = (function checkPlugin(storeScope, pluginSource) {    var result = { found: false, version: "", table: "" };    try {        var saGR = new GlideRecord("sys_store_app");        saGR.addQuery("scope", storeScope);        saGR.setLimit(1);        saGR.query();        if (saGR.next()) {            result.found = true;            result.version = saGR.getValue("version") || "";            result.table = "sys_store_app";            return result;        }    } catch(e1) {}    if (pluginSource) {        try {            var spGR = new GlideRecord("sys_plugins");            spGR.addQuery("source", pluginSource);            spGR.addQuery("active", true);            spGR.setLimit(1);            spGR.query();            if (spGR.next()) {                result.found = true;                result.version = spGR.getValue("version") || "";                result.table = "sys_plugins";                return result;            }        } catch(e2) {}    }    return result;});
@@ -1138,14 +1137,14 @@ AROPCheckLibrary_ITSM.prototype = {
     }
 })();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001201: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005180: ' + e.message };
         }
     },
-    CHK0001172: function() {
+    CHK0005181: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var cutoff = new GlideDateTime();
-    cutoff.addYears(-1);
+    cutoff.addYearsUTC(-1);
 
     var ga = new GlideAggregate('change_request');
     ga.addQuery('sys_created_on', '>=', cutoff.getValue());
@@ -1176,14 +1175,14 @@ AROPCheckLibrary_ITSM.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001172: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005181: ' + e.message };
         }
     },
-    CHK0001190: function() {
+    CHK0005182: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var cutoff = new GlideDateTime();
-    cutoff.addYears(-1);
+    cutoff.addYearsUTC(-1);
 
     var gaTotal = new GlideAggregate('change_request');
     gaTotal.addQuery('sys_created_on', '>=', cutoff.getValue());
@@ -1230,14 +1229,14 @@ AROPCheckLibrary_ITSM.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001190: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005182: ' + e.message };
         }
     },
-    CHK0001197: function() {
+    CHK0005183: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var cutoff = new GlideDateTime();
-    cutoff.addYears(-1);
+    cutoff.addYearsUTC(-1);
 
     var gaTotal = new GlideAggregate('change_request');
     gaTotal.addQuery('sys_created_on', '>=', cutoff.getValue());
@@ -1285,10 +1284,10 @@ AROPCheckLibrary_ITSM.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001197: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005183: ' + e.message };
         }
     },
-    CHK0001203: function() {
+    CHK0005184: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var ga = new GlideAggregate('chg_model');
@@ -1320,10 +1319,10 @@ AROPCheckLibrary_ITSM.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001203: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005184: ' + e.message };
         }
     },
-    CHK0001174: function() {
+    CHK0005185: function() {
         try {
             return (function(checkDef, dateFilter) {
     // Count total closed/resolved problems
@@ -1368,10 +1367,10 @@ AROPCheckLibrary_ITSM.prototype = {
     }
 })();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001174: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005185: ' + e.message };
         }
     },
-    CHK0001183: function() {
+    CHK0005186: function() {
         try {
             return (function(checkDef, dateFilter) {
     var totalGr = new GlideAggregate("problem");
@@ -1442,10 +1441,10 @@ AROPCheckLibrary_ITSM.prototype = {
     }
 })();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001183: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005186: ' + e.message };
         }
     },
-    CHK0001199: function() {
+    CHK0005187: function() {
         try {
             return (function(checkDef, dateFilter) {
     var totalGr = new GlideAggregate("problem");
@@ -1520,10 +1519,10 @@ AROPCheckLibrary_ITSM.prototype = {
     }
 })();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001199: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005187: ' + e.message };
         }
     },
-    CHK0001206: function() {
+    CHK0005188: function() {
         try {
             return ((function(checkDef, dateFilter) {
     function getMIRate(priority) {
@@ -1564,10 +1563,10 @@ AROPCheckLibrary_ITSM.prototype = {
     };
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001206: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005188: ' + e.message };
         }
     },
-    CHK0001178: function() {
+    CHK0005189: function() {
         try {
             return ((function(checkDef, dateFilter) {
     // P1 incidents total
@@ -1637,10 +1636,10 @@ AROPCheckLibrary_ITSM.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001178: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005189: ' + e.message };
         }
     },
-    CHK0001186: function() {
+    CHK0005190: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var totalGr = new GlideAggregate('incident');
@@ -1678,10 +1677,10 @@ AROPCheckLibrary_ITSM.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001186: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005190: ' + e.message };
         }
     },
-    CHK0001193: function() {
+    CHK0005191: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var totalGr = new GlideAggregate('sys_user_group');
@@ -1736,10 +1735,10 @@ AROPCheckLibrary_ITSM.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001193: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005191: ' + e.message };
         }
     },
-    CHK0001209: function() {
+    CHK0005192: function() {
         try {
             return ((function(checkDef, dateFilter) {
     // Count active Flow Designer flows (all) — AI Agents use FD exclusively
@@ -1780,10 +1779,10 @@ AROPCheckLibrary_ITSM.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001209: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005192: ' + e.message };
         }
     },
-    CHK0001181: function() {
+    CHK0005193: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var gaBR = new GlideAggregate('sys_script');
@@ -1824,7 +1823,7 @@ AROPCheckLibrary_ITSM.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001181: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005193: ' + e.message };
         }
     },
     type: 'AROPCheckLibrary_ITSM'
@@ -1833,13 +1832,13 @@ AROPCheckLibrary_ITSM.prototype = {
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2026-05-21 05:02:10</sys_created_on>
         <sys_id>93724e60cfc5c3548935fb251d851ca1</sys_id>
-        <sys_mod_count>3</sys_mod_count>
+        <sys_mod_count>6</sys_mod_count>
         <sys_name>AROPCheckLibrary_ITSM</sys_name>
         <sys_package display_value="ServiceNow AI Readiness Optimization Platform" source="x_snc_airop">73e2562fcf244b908935fb251d851c78</sys_package>
         <sys_policy/>
         <sys_scope display_value="ServiceNow AI Readiness Optimization Platform">73e2562fcf244b908935fb251d851c78</sys_scope>
         <sys_update_name>sys_script_include_93724e60cfc5c3548935fb251d851ca1</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2026-06-02 09:00:27</sys_updated_on>
+        <sys_updated_on>2026-06-08 16:10:53</sys_updated_on>
     </sys_script_include>
 </record_update>

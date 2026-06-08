@@ -48,7 +48,7 @@ if (!checkNum || !module) {
             '    initialize: function() {},\n' +
             '    _count: function(table, query) { var gr = new GlideRecord(table); if (query) gr.addEncodedQuery(query); gr.query(); return gr.getRowCount(); },\n' +
             '    _pct: function(num, den) { return den > 0 ? Math.round((num/den)*100) : 0; },\n' +
-            '    _daysAgo: function(field, days) { var d = new GlideDateTime(); d.addDaysUTC(-days); return field + \'<\' + d.getValue(); },\n';
+            '    _daysAgo: function(field, days) { var d = new GlideDateTime(); d.addDaysUTC(-days); return field + String.fromCharCode(60) + d.getValue(); },\n';
         var libFooter = '    type: \'' + libName + '\'\n};' ;
         var checks = new GlideRecord('x_snc_airop_check_definition');
         checks.addQuery('module', module);
@@ -94,7 +94,7 @@ if (!checkNum || !module) {
         <sys_domain>global</sys_domain>
         <sys_domain_path>/</sys_domain_path>
         <sys_id>e37284d0cfb843148935fb251d851c11</sys_id>
-        <sys_mod_count>9</sys_mod_count>
+        <sys_mod_count>10</sys_mod_count>
         <sys_name>AIROP Remove Check from Library on Deact</sys_name>
         <sys_overrides/>
         <sys_package display_value="ServiceNow AI Readiness Optimization Platform" source="x_snc_airop">73e2562fcf244b908935fb251d851c78</sys_package>
@@ -102,7 +102,7 @@ if (!checkNum || !module) {
         <sys_scope display_value="ServiceNow AI Readiness Optimization Platform">73e2562fcf244b908935fb251d851c78</sys_scope>
         <sys_update_name>sys_script_e37284d0cfb843148935fb251d851c11</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2026-05-21 06:23:17</sys_updated_on>
+        <sys_updated_on>2026-06-05 05:15:46</sys_updated_on>
         <template/>
         <when>after</when>
     </sys_script>

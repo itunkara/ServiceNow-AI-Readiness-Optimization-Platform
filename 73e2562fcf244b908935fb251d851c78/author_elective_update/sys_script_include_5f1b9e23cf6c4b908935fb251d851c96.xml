@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update>
+    <sys_script_include action="DELETE">
+<access>package_private</access>
+<active>true</active>
+<api_name>x_snc_airop.AROP_INTEGRATION</api_name>
+<caller_access/>
+<client_callable>false</client_callable>
+<description>AROP_INTEGRATION module assessment stub</description>
+<mobile_callable>false</mobile_callable>
+<name>AROP_INTEGRATION</name>
+<sandbox_callable>false</sandbox_callable>
+<script><![CDATA[var AROP_INTEGRATION = Class.create();
+AROP_INTEGRATION.prototype = {
+    initialize: function() {
+        this.module = 'INTEGRATION';
+        this.utils  = new AROPUtils();
+    },
+    execute: function(runId) {
+        gs.info('[AIROP] Starting INTEGRATION checks for run: ' + runId);
+        var checks     = this.utils.getActiveChecks(this.module);
+        var dateFilter = this.utils.getDateRangeFilter();
+        var count      = 0;
+        for (var i = 0; i < checks.length; i++) {
+            var check = checks[i];
+            try {
+                var result = this._evalCheck(check, dateFilter);
+                this.utils.storeResult(runId, check, result.status, result.actualValue, result.finding);
+                count++;
+                gs.info('[AIROP] ' + check.check_id + ' - ' + result.status);
+            } catch(e) {
+                gs.error('[AIROP] Error in check ' + check.check_id + ': ' + e.message);
+                this.utils.storeResult(runId, check, 'needs_attention', 'Error: ' + e.message, 'Check execution error: ' + e.message);
+                count++;
+            }
+        }
+        gs.info('[AIROP] INTEGRATION complete - ' + count + ' checks executed');
+        return count;
+    },
+    _evalCheck: function(checkDef, dateFilter) {
+        var result = { status: 'needs_attention', actualValue: 'Check not evaluated' };
+        var handler = checkDef.check_id;
+        if (!handler) {
+            result.actualValue = 'No check_handler defined for: ' + checkDef.check_id;
+            return result;
+        }
+        try {
+            var lib = new AROPCheckLibrary_INTEGRATION();
+            if (typeof lib[handler] !== 'function') {
+                result.actualValue = 'Handler method not found in AROPCheckLibrary: ' + handler;
+                return result;
+            }
+            result = lib[handler]();
+        } catch(e) {
+            result.status      = 'needs_attention';
+            result.actualValue = 'Handler error in ' + handler + ': ' + e.message;
+            gs.error('[AIROP] Handler error ' + handler + ': ' + e.message);
+        }
+        return result;
+    },
+    type: 'AROP_INTEGRATION'
+};]]></script>
+<sys_class_name>sys_script_include</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-05-05 18:00:07</sys_created_on>
+<sys_id>5f1b9e23cf6c4b908935fb251d851c96</sys_id>
+<sys_mod_count>8</sys_mod_count>
+<sys_name>AROP_INTEGRATION</sys_name>
+<sys_package display_value="ServiceNow AI Readiness Optimization Platform" source="x_snc_airop">73e2562fcf244b908935fb251d851c78</sys_package>
+<sys_policy/>
+<sys_scope display_value="ServiceNow AI Readiness Optimization Platform">73e2562fcf244b908935fb251d851c78</sys_scope>
+<sys_update_name>sys_script_include_5f1b9e23cf6c4b908935fb251d851c96</sys_update_name>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-05-21 05:01:30</sys_updated_on>
+</sys_script_include>
+    <sys_update_version action="INSERT_OR_UPDATE">
+        <action>DELETE</action>
+        <application display_value="ServiceNow AI Readiness Optimization Platform">73e2562fcf244b908935fb251d851c78</application>
+        <file_path/>
+        <instance_id>48bb485aebdefa90cbdefceacad0cd82</instance_id>
+        <instance_name>demoalectriallwf137518</instance_name>
+        <name>sys_script_include_5f1b9e23cf6c4b908935fb251d851c96</name>
+        <payload>&lt;?xml version="1.0" encoding="UTF-8"?&gt;&lt;record_update&gt;&lt;sys_script_include action="INSERT_OR_UPDATE"&gt;
+&lt;access&gt;package_private&lt;/access&gt;
+&lt;active&gt;true&lt;/active&gt;
+&lt;api_name&gt;x_snc_airop.AROP_INTEGRATION&lt;/api_name&gt;
+&lt;caller_access/&gt;
+&lt;client_callable&gt;false&lt;/client_callable&gt;
+&lt;description&gt;AROP_INTEGRATION module assessment stub&lt;/description&gt;
+&lt;mobile_callable&gt;false&lt;/mobile_callable&gt;
+&lt;name&gt;AROP_INTEGRATION&lt;/name&gt;
+&lt;sandbox_callable&gt;false&lt;/sandbox_callable&gt;
+&lt;script&gt;&lt;![CDATA[var AROP_INTEGRATION = Class.create();
+AROP_INTEGRATION.prototype = {
+    initialize: function() {
+        this.module = 'INTEGRATION';
+        this.utils  = new AROPUtils();
+    },
+    execute: function(runId) {
+        gs.info('[AIROP] Starting INTEGRATION checks for run: ' + runId);
+        var checks     = this.utils.getActiveChecks(this.module);
+        var dateFilter = this.utils.getDateRangeFilter();
+        var count      = 0;
+        for (var i = 0; i &lt; checks.length; i++) {
+            var check = checks[i];
+            try {
+                var result = this._evalCheck(check, dateFilter);
+                this.utils.storeResult(runId, check, result.status, result.actualValue, result.finding);
+                count++;
+                gs.info('[AIROP] ' + check.check_id + ' - ' + result.status);
+            } catch(e) {
+                gs.error('[AIROP] Error in check ' + check.check_id + ': ' + e.message);
+                this.utils.storeResult(runId, check, 'needs_attention', 'Error: ' + e.message, 'Check execution error: ' + e.message);
+                count++;
+            }
+        }
+        gs.info('[AIROP] INTEGRATION complete - ' + count + ' checks executed');
+        return count;
+    },
+    _evalCheck: function(checkDef, dateFilter) {
+        var result = { status: 'needs_attention', actualValue: 'Check not evaluated' };
+        var handler = checkDef.check_id;
+        if (!handler) {
+            result.actualValue = 'No check_handler defined for: ' + checkDef.check_id;
+            return result;
+        }
+        try {
+            var lib = new AROPCheckLibrary_INTEGRATION();
+            if (typeof lib[handler] !== 'function') {
+                result.actualValue = 'Handler method not found in AROPCheckLibrary: ' + handler;
+                return result;
+            }
+            result = lib[handler]();
+        } catch(e) {
+            result.status      = 'needs_attention';
+            result.actualValue = 'Handler error in ' + handler + ': ' + e.message;
+            gs.error('[AIROP] Handler error ' + handler + ': ' + e.message);
+        }
+        return result;
+    },
+    type: 'AROP_INTEGRATION'
+};]]&gt;&lt;/script&gt;
+&lt;sys_class_name&gt;sys_script_include&lt;/sys_class_name&gt;
+&lt;sys_created_by&gt;admin&lt;/sys_created_by&gt;
+&lt;sys_created_on&gt;2026-05-05 18:00:07&lt;/sys_created_on&gt;
+&lt;sys_id&gt;5f1b9e23cf6c4b908935fb251d851c96&lt;/sys_id&gt;
+&lt;sys_mod_count&gt;8&lt;/sys_mod_count&gt;
+&lt;sys_name&gt;AROP_INTEGRATION&lt;/sys_name&gt;
+&lt;sys_package display_value="ServiceNow AI Readiness Optimization Platform" source="x_snc_airop"&gt;73e2562fcf244b908935fb251d851c78&lt;/sys_package&gt;
+&lt;sys_policy/&gt;
+&lt;sys_scope display_value="ServiceNow AI Readiness Optimization Platform"&gt;73e2562fcf244b908935fb251d851c78&lt;/sys_scope&gt;
+&lt;sys_update_name&gt;sys_script_include_5f1b9e23cf6c4b908935fb251d851c96&lt;/sys_update_name&gt;
+&lt;sys_updated_by&gt;admin&lt;/sys_updated_by&gt;
+&lt;sys_updated_on&gt;2026-05-21 05:01:30&lt;/sys_updated_on&gt;
+&lt;/sys_script_include&gt;&lt;/record_update&gt;</payload>
+        <payload_hash>-1810752756</payload_hash>
+        <record_name>AROP_INTEGRATION</record_name>
+        <reverted_from/>
+        <source>1e8ee859cf1183508935fb251d851c20</source>
+        <source_table>sys_update_set</source_table>
+        <state>previous</state>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-06-05 05:50:10</sys_created_on>
+        <sys_id>745d5311cf194b508935fb251d851cfe</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_recorded_at>19e9654f6150000001</sys_recorded_at>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-06-05 05:50:10</sys_updated_on>
+        <type>Script Include</type>
+        <update_guid>145d531152194b505880c60b0f4152fd</update_guid>
+        <update_guid_history>145d531152194b505880c60b0f4152fd:-1810752756,dad033bb3f6c87d0174f98a98e46b61e:468621309,1fef327f3cac07d083288058a7631238:310813480,0d927affe1a407d062acdd2320012fef:-87750265,75c1bab725a407d0162464c703a523a3:-37846397,1e828cf3bae84f9008b2eb04cfe64519:-1331947639,482b9e232a6c4b90b30fadec29406699:982870768</update_guid_history>
+    </sys_update_version>
+    <sys_metadata_delete action="INSERT_OR_UPDATE">
+        <sys_audit_delete/>
+        <sys_class_name>sys_metadata_delete</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-06-08 17:13:56</sys_created_on>
+        <sys_db_object display_value="" name="sys_script_include">sys_script_include</sys_db_object>
+        <sys_id>53f4fff8774b48009d2b3224cf75d900</sys_id>
+        <sys_metadata>5f1b9e23cf6c4b908935fb251d851c96</sys_metadata>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>AROP_INTEGRATION</sys_name>
+        <sys_package display_value="ServiceNow AI Readiness Optimization Platform" source="x_snc_airop">73e2562fcf244b908935fb251d851c78</sys_package>
+        <sys_parent/>
+        <sys_policy/>
+        <sys_scope display_value="ServiceNow AI Readiness Optimization Platform">73e2562fcf244b908935fb251d851c78</sys_scope>
+        <sys_scope_delete display_value="">3d15655892484816825b3e4059b36991</sys_scope_delete>
+        <sys_update_name>sys_script_include_5f1b9e23cf6c4b908935fb251d851c96</sys_update_name>
+        <sys_update_version display_value="sys_script_include_5f1b9e23cf6c4b908935fb251d851c96">745d5311cf194b508935fb251d851cfe</sys_update_version>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-06-08 17:13:56</sys_updated_on>
+    </sys_metadata_delete>
+</record_update>

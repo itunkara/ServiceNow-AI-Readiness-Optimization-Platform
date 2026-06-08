@@ -14,8 +14,7 @@ AROPCheckLibrary_PLATFORM.prototype = {
     initialize: function() {},
     _count: function(table, query) { var gr = new GlideRecord(table); if (query) gr.addEncodedQuery(query); gr.query(); return gr.getRowCount(); },
     _pct: function(num, den) { return den > 0 ? Math.round((num/den)*100) : 0; },
-    _daysAgo: function(field, days) { var d = new GlideDateTime(); d.addDaysUTC(-days); return field + '<' + d.getValue(); },
-    CHK0001244: function() {
+    CHK0005214: function() {
         try {
             return (function(checkDef, dateFilter) {
     // Check sys_store_app by scope first
@@ -38,10 +37,10 @@ AROPCheckLibrary_PLATFORM.prototype = {
     return { status: "blocker", actualValue: "Now Assist Core not found in sys_store_app (scope: now_assist_core) or sys_plugins.", finding: "Now Assist Core not installed. Required for all Now Assist and AI Agent features across all modules." };
 })();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001244: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005214: ' + e.message };
         }
     },
-    CHK0001238: function() {
+    CHK0005215: function() {
         try {
             return (function(checkDef, dateFilter) {
     var checkPlugin = (function checkPlugin(storeScope, pluginSource) {    var result = { found: false, version: "", table: "" };    try {        var saGR = new GlideRecord("sys_store_app");        saGR.addQuery("scope", storeScope);        saGR.setLimit(1);        saGR.query();        if (saGR.next()) {            result.found = true;            result.version = saGR.getValue("version") || "";            result.table = "sys_store_app";            return result;        }    } catch(e1) {}    if (pluginSource) {        try {            var spGR = new GlideRecord("sys_plugins");            spGR.addQuery("source", pluginSource);            spGR.addQuery("active", true);            spGR.setLimit(1);            spGR.query();            if (spGR.next()) {                result.found = true;                result.version = spGR.getValue("version") || "";                result.table = "sys_plugins";                return result;            }        } catch(e2) {}    }    return result;});
@@ -82,10 +81,10 @@ AROPCheckLibrary_PLATFORM.prototype = {
     }
 })();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001238: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005215: ' + e.message };
         }
     },
-    CHK0001249: function() {
+    CHK0005216: function() {
         try {
             return (function(){
 var gr=new GlideRecord("sys_plugins");
@@ -95,10 +94,10 @@ var n=gr.getRowCount();
 return{status:n>=1?"ready":"needs_attention",actualValue:n+" Integration Hub plugins active",finding:n<1?"Integration Hub is not active. AI Agents cannot perform external system automation without active Integration Hub spokes.":"Integration Hub is active -- AI Agents can leverage spokes for external automation."};
 })();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001249: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005216: ' + e.message };
         }
     },
-    CHK0001250: function() {
+    CHK0005217: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var ga = new GlideAggregate('sys_hub_flow');
@@ -130,10 +129,10 @@ return{status:n>=1?"ready":"needs_attention",actualValue:n+" Integration Hub plu
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001250: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005217: ' + e.message };
         }
     },
-    CHK0001251: function() {
+    CHK0005218: function() {
         try {
             return ((function(checkDef, dateFilter) {
     // Use functional evidence — ml_solution table existing and being valid
@@ -158,10 +157,10 @@ return{status:n>=1?"ready":"needs_attention",actualValue:n+" Integration Hub plu
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001251: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005218: ' + e.message };
         }
     },
-    CHK0001245: function() {
+    CHK0005219: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var gaTotal = new GlideAggregate('ml_solution');
@@ -209,10 +208,10 @@ return{status:n>=1?"ready":"needs_attention",actualValue:n+" Integration Hub plu
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001245: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005219: ' + e.message };
         }
     },
-    CHK0001246: function() {
+    CHK0005220: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var ga = new GlideAggregate('pa_indicators');
@@ -244,10 +243,10 @@ return{status:n>=1?"ready":"needs_attention",actualValue:n+" Integration Hub plu
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001246: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005220: ' + e.message };
         }
     },
-    CHK0001247: function() {
+    CHK0005221: function() {
         try {
             return ((function(checkDef, dateFilter) {
     // Find the most recent platform upgrade (filter for glide- prefix = platform release)
@@ -298,10 +297,10 @@ return{status:n>=1?"ready":"needs_attention",actualValue:n+" Integration Hub plu
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001247: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005221: ' + e.message };
         }
     },
-    CHK0001248: function() {
+    CHK0005222: function() {
         try {
             return (function(){
 var gr=new GlideRecord("ecc_agent");
@@ -314,10 +313,10 @@ var total=gr2.getRowCount();
 return{status:up>=1?"ready":"needs_attention",actualValue:total+" MID Servers | "+up+" Up",finding:up<1?"No MID Servers are Up. AI Agent-triggered discovery probes and on-premise integrations will fail without available MID Servers.":""+up+" MID Servers are Up and available for AI Agent execution."};
 })();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001248: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005222: ' + e.message };
         }
     },
-    CHK0001239: function() {
+    CHK0005223: function() {
         try {
             return (function(){
 var gr=new GlideRecord("sys_update_set");
@@ -327,10 +326,10 @@ var inProgress=gr.getRowCount();
 return{status:inProgress>=1?"ready":"needs_attention",actualValue:inProgress+" update sets in progress",finding:inProgress<1?"No update sets currently in progress. All customizations should be tracked in update sets to prevent conflicts with Now Assist configurations during upgrades.":""+inProgress+" update sets in progress -- customization tracking is active."};
 })();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001239: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005223: ' + e.message };
         }
     },
-    CHK0001240: function() {
+    CHK0005224: function() {
         try {
             return (function(){
 var gr=new GlideRecord("sys_email_account");
@@ -341,10 +340,10 @@ var n=gr.getRowCount();
 return{status:n>=1?"ready":"needs_attention",actualValue:n+" active SMTP email accounts",finding:n<1?"No active SMTP email accounts configured. AI Agents cannot send notifications without outbound email configuration.":""+n+" active SMTP accounts configured -- AI Agent notifications can be delivered."};
 })();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001240: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005224: ' + e.message };
         }
     },
-    CHK0001241: function() {
+    CHK0005225: function() {
         try {
             return (function(){
 var gr=new GlideRecord("sys_security_acl");
@@ -354,10 +353,10 @@ var n=gr.getRowCount();
 return{status:n>=10?"ready":"needs_attention",actualValue:n+" ACLs on core AI tables",finding:n<10?"Only "+n+" ACLs found on core AI tables (incident, task, change_request, cmdb_ci). Proper ACL coverage is required before production AI Agent enablement.":""+n+" ACLs protect core AI tables -- access control coverage is adequate."};
 })();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001241: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005225: ' + e.message };
         }
     },
-    CHK0001242: function() {
+    CHK0005226: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var ga = new GlideAggregate('sp_portal');
@@ -383,50 +382,39 @@ return{status:n>=10?"ready":"needs_attention",actualValue:n+" ACLs on core AI ta
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001242: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005226: ' + e.message };
         }
     },
-    CHK0001230: function() {
+    CHK0005227: function() {
         try {
-            return ((function(checkDef, dateFilter) {
-    // Use separate queries to avoid OR precedence issues
+            return (function() {
+    var t = new GlideRecord("samp_sw_license_metric");
+    if (!t.isValid()) {
+        return { status: "value_blocker", actualValue: "Required table samp_sw_license_metric not found", finding: "License Metric table is not available. Verify the SAM plugin is active." };
+    }
     var matched = {};
-
     function collectMatches(keyword) {
-        var gr = new GlideRecord('license_metric');
-        gr.addQuery('name', 'CONTAINS', keyword);
+        var gr = new GlideRecord("samp_sw_license_metric");
+        gr.addQuery("name", "CONTAINS", keyword);
         gr.query();
-        while (gr.next()) {
-            matched[gr.getUniqueValue()] = true;
-        }
+        while (gr.next()) { matched[gr.getUniqueValue()] = true; }
     }
-
-    collectMatches('now_assist');
-    collectMatches('NowAssist');
-    collectMatches('now assist');
-
+    collectMatches("now_assist");
+    collectMatches("NowAssist");
+    collectMatches("now assist");
     var count = Object.keys(matched).length;
-    var actualValue = count + ' Now Assist license metric record(s) found';
-
+    var actualValue = count + " Now Assist license metric record(s) found";
     if (count > 0) {
-        return {
-            status: 'ready',
-            actualValue: actualValue,
-            finding: count + ' Now Assist license metric record(s) found. Confirm specific module entitlements (ITSM, ITOM, HRSD, CSM, etc.) with your ServiceNow account team.'
-        };
+        return { status: "ready", actualValue: actualValue, finding: count + " Now Assist license metric record(s) found. Confirm specific module entitlements (ITSM, ITOM, HRSD, CSM, etc.) with your ServiceNow account team." };
     } else {
-        return {
-            status: 'not_ready',
-            actualValue: actualValue,
-            finding: 'No Now Assist license metric records found. Now Assist is entitlement-gated — confirm SKU entitlement with your ServiceNow account team before beginning configuration.'
-        };
+        return { status: "value_blocker", actualValue: actualValue, finding: "No Now Assist license metric records found. Now Assist is entitlement-gated — confirm SKU entitlement with your ServiceNow account team before beginning configuration." };
     }
-}))();
+})();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001230: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005227: ' + e.message };
         }
     },
-    CHK0001231: function() {
+    CHK0005228: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var gaActive = new GlideAggregate('sysauto_script');
@@ -464,10 +452,10 @@ return{status:n>=10?"ready":"needs_attention",actualValue:n+" ACLs on core AI ta
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001231: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005228: ' + e.message };
         }
     },
-    CHK0001232: function() {
+    CHK0005229: function() {
         try {
             return ((function(checkDef, dateFilter) {
     // Check sys_scope for data classification plugin
@@ -503,10 +491,10 @@ return{status:n>=10?"ready":"needs_attention",actualValue:n+" ACLs on core AI ta
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001232: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005229: ' + e.message };
         }
     },
-    CHK0001234: function() {
+    CHK0005230: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var ga = new GlideAggregate('sys_scope_privilege');
@@ -538,10 +526,10 @@ return{status:n>=10?"ready":"needs_attention",actualValue:n+" ACLs on core AI ta
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001234: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005230: ' + e.message };
         }
     },
-    CHK0001243: function() {
+    CHK0005231: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var ga = new GlideAggregate('sys_user_has_role');
@@ -568,10 +556,10 @@ return{status:n>=10?"ready":"needs_attention",actualValue:n+" ACLs on core AI ta
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001243: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005231: ' + e.message };
         }
     },
-    CHK0001235: function() {
+    CHK0005232: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var cutoff = new GlideDateTime();
@@ -606,10 +594,10 @@ return{status:n>=10?"ready":"needs_attention",actualValue:n+" ACLs on core AI ta
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001235: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005232: ' + e.message };
         }
     },
-    CHK0001236: function() {
+    CHK0005233: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var gaBR = new GlideAggregate('sys_script');
@@ -652,50 +640,30 @@ return{status:n>=10?"ready":"needs_attention",actualValue:n+" ACLs on core AI ta
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001236: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005233: ' + e.message };
         }
     },
-    CHK0001237: function() {
+    CHK0005234: function() {
         try {
-            return ((function(checkDef, dateFilter) {
-    var testGr = new GlideRecord('sn_aisearch_search_profile');
-    testGr.setLimit(1);
-    testGr.query();
-    if (!testGr.isValid()) {
-        return {
-            status: 'not_applicable',
-            actualValue: 'AI Search profile table not found',
-            finding: 'AI Search (sn_aisearch_search_profile) is not installed on this instance. AI Search may not be part of the current entitlement or configuration.'
-        };
+            return (function() {
+    var t = new GlideRecord("ais_search_profile");
+    if (!t.isValid()) {
+        return { status: "not_applicable", actualValue: "AI Search profile table not found", finding: "AI Search (ais_search_profile) is not installed on this instance. AI Search may not be part of the current entitlement or configuration." };
     }
-
-    var ga = new GlideAggregate('sn_aisearch_search_profile');
-    ga.addQuery('active', true);
-    ga.addAggregate('COUNT');
+    var ga = new GlideAggregate("ais_search_profile");
+    ga.addQuery("active", true);
+    ga.addAggregate("COUNT");
     ga.query();
-    var count = ga.next() ? parseInt(ga.getAggregate('COUNT')) : 0;
-
-    var actualValue = count + ' active AI Search profile(s)';
-
-    if (count >= 1) {
-        return {
-            status: 'ready',
-            actualValue: actualValue,
-            finding: count + ' active AI Search profile(s) configured. Now Assist AI Search is set up to return results to end users.'
-        };
-    } else {
-        return {
-            status: 'not_ready',
-            actualValue: actualValue,
-            finding: 'No active AI Search profiles configured. Now Assist AI Search requires at least one active search profile with indexed sources — without it AI Search returns no results to end users.'
-        };
-    }
-}))();
+    var count = ga.next() ? parseInt(ga.getAggregate("COUNT")) : 0;
+    var actualValue = count + " active AI Search profile(s)";
+    if (count >= 1) return { status: "ready", actualValue: actualValue, finding: count + " active AI Search profile(s) configured. Now Assist AI Search is set up to return results to end users." };
+    return { status: "value_blocker", actualValue: actualValue, finding: "No active AI Search profiles configured. Now Assist AI Search requires at least one active search profile with indexed sources — without it AI Search returns no results to end users." };
+})();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001237: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005234: ' + e.message };
         }
     },
-    CHK0001233: function() {
+    CHK0005235: function() {
         try {
             return ((function() {
     var ecPro = new GlideRecord("sys_store_app");
@@ -715,7 +683,7 @@ return{status:n>=10?"ready":"needs_attention",actualValue:n+" ACLs on core AI ta
     return { status: "not_ready", actualValue: "Neither Employee Center nor Employee Center Pro is active", finding: "Neither Employee Center nor Employee Center Pro is active. AI-powered employee self-service experiences are unavailable without Employee Center." };
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001233: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005235: ' + e.message };
         }
     },
     type: 'AROPCheckLibrary_PLATFORM'
@@ -724,13 +692,13 @@ return{status:n>=10?"ready":"needs_attention",actualValue:n+" ACLs on core AI ta
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2026-05-21 05:28:40</sys_created_on>
         <sys_id>eb884a60cfc9c3548935fb251d851c13</sys_id>
-        <sys_mod_count>5</sys_mod_count>
+        <sys_mod_count>8</sys_mod_count>
         <sys_name>AROPCheckLibrary_PLATFORM</sys_name>
         <sys_package display_value="ServiceNow AI Readiness Optimization Platform" source="x_snc_airop">73e2562fcf244b908935fb251d851c78</sys_package>
         <sys_policy/>
         <sys_scope display_value="ServiceNow AI Readiness Optimization Platform">73e2562fcf244b908935fb251d851c78</sys_scope>
         <sys_update_name>sys_script_include_eb884a60cfc9c3548935fb251d851c13</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2026-06-03 00:29:10</sys_updated_on>
+        <sys_updated_on>2026-06-08 16:10:54</sys_updated_on>
     </sys_script_include>
 </record_update>

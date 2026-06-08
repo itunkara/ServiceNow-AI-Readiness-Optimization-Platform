@@ -52,7 +52,7 @@ if (isActive !== '1' && isActive !== true) {
             '    initialize: function() {},\n' +
             '    _count: function(table, query) { var gr = new GlideRecord(table); if (query) gr.addEncodedQuery(query); gr.query(); return gr.getRowCount(); },\n' +
             '    _pct: function(num, den) { return den > 0 ? Math.round((num/den)*100) : 0; },\n' +
-            '    _daysAgo: function(field, days) { var d = new GlideDateTime(); d.addDaysUTC(-days); return field + \'<\' + d.getValue(); },\n';
+            '    _daysAgo: function(field, days) { var d = new GlideDateTime(); d.addDaysUTC(-days); return field + String.fromCharCode(60) + d.getValue(); },\n';
         var libFooter = '    type: \'' + libName + '\'\n};' ;
         var checks = new GlideRecord('x_snc_airop_check_definition');
         checks.addQuery('module', module);
@@ -97,7 +97,7 @@ if (isActive !== '1' && isActive !== true) {
         <sys_domain>global</sys_domain>
         <sys_domain_path>/</sys_domain_path>
         <sys_id>d6312844cf780bd08935fb251d851c3a</sys_id>
-        <sys_mod_count>30</sys_mod_count>
+        <sys_mod_count>31</sys_mod_count>
         <sys_name>AIROP Inject Check Script into Library</sys_name>
         <sys_overrides/>
         <sys_package display_value="ServiceNow AI Readiness Optimization Platform" source="x_snc_airop">73e2562fcf244b908935fb251d851c78</sys_package>
@@ -105,7 +105,7 @@ if (isActive !== '1' && isActive !== true) {
         <sys_scope display_value="ServiceNow AI Readiness Optimization Platform">73e2562fcf244b908935fb251d851c78</sys_scope>
         <sys_update_name>sys_script_d6312844cf780bd08935fb251d851c3a</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2026-06-02 08:58:51</sys_updated_on>
+        <sys_updated_on>2026-06-05 05:15:46</sys_updated_on>
         <template/>
         <when>after</when>
     </sys_script>

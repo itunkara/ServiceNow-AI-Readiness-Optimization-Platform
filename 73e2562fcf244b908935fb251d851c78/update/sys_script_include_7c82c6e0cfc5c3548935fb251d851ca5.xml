@@ -14,8 +14,7 @@ AROPCheckLibrary_HRSD.prototype = {
     initialize: function() {},
     _count: function(table, query) { var gr = new GlideRecord(table); if (query) gr.addEncodedQuery(query); gr.query(); return gr.getRowCount(); },
     _pct: function(num, den) { return den > 0 ? Math.round((num/den)*100) : 0; },
-    _daysAgo: function(field, days) { var d = new GlideDateTime(); d.addDaysUTC(-days); return field + '<' + d.getValue(); },
-    CHK0001140: function() {
+    CHK0005106: function() {
         try {
             return (function(checkDef, dateFilter) {
     var checkPlugin = (function checkPlugin(storeScope, pluginSource) {    var result = { found: false, version: "", table: "" };    try {        var saGR = new GlideRecord("sys_store_app");        saGR.addQuery("scope", storeScope);        saGR.setLimit(1);        saGR.query();        if (saGR.next()) {            result.found = true;            result.version = saGR.getValue("version") || "";            result.table = "sys_store_app";            return result;        }    } catch(e1) {}    if (pluginSource) {        try {            var spGR = new GlideRecord("sys_plugins");            spGR.addQuery("source", pluginSource);            spGR.addQuery("active", true);            spGR.setLimit(1);            spGR.query();            if (spGR.next()) {                result.found = true;                result.version = spGR.getValue("version") || "";                result.table = "sys_plugins";                return result;            }        } catch(e2) {}    }    return result;});
@@ -35,15 +34,15 @@ AROPCheckLibrary_HRSD.prototype = {
     }
 })();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001140: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005106: ' + e.message };
         }
     },
-    CHK0001136: function() {
+    CHK0005107: function() {
         try {
             return ((function(checkDef, dateFilter) {
     // HR case closed states: 3=Closed Complete, 4=Closed Incomplete
     var cutoff = new GlideDateTime();
-    cutoff.addYears(-1);
+    cutoff.addYearsUTC(-1);
 
     var ga = new GlideAggregate('sn_hr_core_case');
     ga.addQuery('sys_created_on', '>=', cutoff.getValue());
@@ -74,16 +73,16 @@ AROPCheckLibrary_HRSD.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001136: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005107: ' + e.message };
         }
     },
-    CHK0001137: function() {
+    CHK0005108: function() {
         try {
             return ((function(checkDef, dateFilter) {
     // HR case closed states: 3=Closed Complete, 4=Closed Incomplete
     // close_notes is the OOB resolution field on sn_hr_core_case
     var cutoff = new GlideDateTime();
-    cutoff.addYears(-1);
+    cutoff.addYearsUTC(-1);
 
     var gaTotal = new GlideAggregate('sn_hr_core_case');
     gaTotal.addQuery('state', 'IN', '3,4');
@@ -133,10 +132,10 @@ AROPCheckLibrary_HRSD.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001137: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005108: ' + e.message };
         }
     },
-    CHK0001138: function() {
+    CHK0005109: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var ga = new GlideAggregate('kb_knowledge');
@@ -169,15 +168,15 @@ AROPCheckLibrary_HRSD.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001138: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005109: ' + e.message };
         }
     },
-    CHK0001139: function() {
+    CHK0005110: function() {
         try {
             return ((function(checkDef, dateFilter) {
     // HR case closed states: 3=Closed Complete, 4=Closed Incomplete
     var cutoff = new GlideDateTime();
-    cutoff.addYears(-1);
+    cutoff.addYearsUTC(-1);
 
     var gaTotal = new GlideAggregate('sn_hr_core_case');
     gaTotal.addQuery('state', 'IN', '3,4');
@@ -226,14 +225,14 @@ AROPCheckLibrary_HRSD.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001139: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005110: ' + e.message };
         }
     },
-    CHK0001121: function() {
+    CHK0005111: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var cutoff = new GlideDateTime();
-    cutoff.addYears(-1);
+    cutoff.addYearsUTC(-1);
 
     // Collect distinct assignment groups used on HR cases in last 12 months
     var usedGroups = {};
@@ -290,10 +289,10 @@ AROPCheckLibrary_HRSD.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001121: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005111: ' + e.message };
         }
     },
-    CHK0001122: function() {
+    CHK0005112: function() {
         try {
             return ((function(checkDef, dateFilter) {
     // Count active catalog items linked to HR COEs via sc_cat_item
@@ -343,10 +342,10 @@ AROPCheckLibrary_HRSD.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001122: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005112: ' + e.message };
         }
     },
-    CHK0001123: function() {
+    CHK0005113: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var ga = new GlideAggregate('sn_hr_core_document_template');
@@ -378,10 +377,10 @@ AROPCheckLibrary_HRSD.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001123: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005113: ' + e.message };
         }
     },
-    CHK0001124: function() {
+    CHK0005114: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var ga = new GlideAggregate('sn_hr_core_journey');
@@ -413,10 +412,10 @@ AROPCheckLibrary_HRSD.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001124: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005114: ' + e.message };
         }
     },
-    CHK0001132: function() {
+    CHK0005115: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var ga = new GlideAggregate('sla');
@@ -449,15 +448,15 @@ AROPCheckLibrary_HRSD.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001132: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005115: ' + e.message };
         }
     },
-    CHK0001133: function() {
+    CHK0005116: function() {
         try {
             return ((function(checkDef, dateFilter) {
     // HR case closed states: 3=Closed Complete, 4=Closed Incomplete
     var cutoff = new GlideDateTime();
-    cutoff.addYears(-1);
+    cutoff.addYearsUTC(-1);
 
     var gaTotal = new GlideAggregate('sn_hr_core_case');
     gaTotal.addQuery('state', 'IN', '3,4');
@@ -506,92 +505,42 @@ AROPCheckLibrary_HRSD.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001133: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005116: ' + e.message };
         }
     },
-    CHK0001134: function() {
+    CHK0005117: function() {
         try {
-            return ((function(checkDef, dateFilter) {
-    // sn_hr_core_coe may not exist on all instances — add table guard
-    var testGr = new GlideRecord('sn_hr_core_coe');
-    testGr.setLimit(1);
-    testGr.query();
-    if (!testGr.isValid()) {
-        return {
-            status: 'not_applicable',
-            actualValue: 'HR COE table (sn_hr_core_coe) not found',
-            finding: 'HR Centers of Excellence table does not exist on this instance. HR COE may not be activated — AI routing will default to generic assignment logic.'
-        };
-    }
-
-    var ga = new GlideAggregate('sn_hr_core_coe');
-    ga.addQuery('active', true);
-    ga.addAggregate('COUNT');
-    ga.query();
-    var count = ga.next() ? parseInt(ga.getAggregate('COUNT')) : 0;
-
-    var actualValue = count + ' active HR Centers of Excellence';
-
-    if (count >= 3) {
-        return {
-            status: 'ready',
-            actualValue: actualValue,
-            finding: count + ' active HR COEs. Now Assist HRSD can provide department-aware AI case routing based on COE structure.'
-        };
-    } else if (count >= 1) {
-        return {
-            status: 'needs_attention',
-            actualValue: actualValue,
-            finding: 'Only ' + count + ' active HR COE(s) (target: 3+). Now Assist HRSD routing will have limited organizational differentiation.'
-        };
-    } else {
-        return {
-            status: 'not_ready',
-            actualValue: actualValue,
-            finding: 'No active HR COEs configured. COEs define the routing structure Now Assist uses for intelligent HR case assignment — without them AI routing defaults to generic logic.'
-        };
-    }
-}))();
+            return (function(){try{var testGr=new GlideRecord("sn_hr_core_coe");testGr.setLimit(1);testGr.query();if(!testGr.isValid()){return{status:"not_applicable",actualValue:"HR COE table not found",finding:"HR Centers of Excellence table does not exist on this instance."};} var ga=new GlideAggregate("sn_hr_core_coe");ga.addQuery("active",true);ga.addAggregate("COUNT");ga.query();var count=ga.next()?parseInt(ga.getAggregate("COUNT")):0;var actualValue=count+" active HR Centers of Excellence";if(count>=3){return{status:"ready",actualValue:actualValue,finding:count+" active HR COEs. Now Assist HRSD can provide department-aware AI case routing based on COE structure."};}else if(count>=1){return{status:"needs_attention",actualValue:actualValue,finding:"Only "+count+" active HR COE(s) (target: 3+). Now Assist HRSD routing will have limited organizational differentiation."};}else{return{status:"not_ready",actualValue:actualValue,finding:"No active HR COEs configured. COEs define the routing structure Now Assist uses for intelligent HR case assignment."};}}catch(e){return{status:"needs_validation",actualValue:"Check failed — manual verification required",finding:"Script execution error: "+e.message};}})();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001134: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005117: ' + e.message };
         }
     },
-    CHK0001135: function() {
+    CHK0005118: function() {
         try {
-            return ((function(checkDef, dateFilter) {
-    var ga = new GlideAggregate('sn_hr_core_skill');
-    ga.addQuery('active', true);
-    ga.addAggregate('COUNT');
+            return (function() {
+    var t = new GlideRecord("cmn_skill");
+    if (!t.isValid()) {
+        return { status: "value_blocker", actualValue: "Required table cmn_skill not found", finding: "Skills table (cmn_skill) is not available. Verify the Skills plugin is active." };
+    }
+    var ga = new GlideAggregate("cmn_skill");
+    ga.addQuery("active", true);
+    ga.addAggregate("COUNT");
     ga.query();
-    var count = ga.next() ? parseInt(ga.getAggregate('COUNT')) : 0;
-
-    var actualValue = count + ' active HR skill definitions';
-
+    var count = ga.next() ? parseInt(ga.getAggregate("COUNT")) : 0;
+    var actualValue = count + " active skill definitions";
     if (count >= 10) {
-        return {
-            status: 'ready',
-            actualValue: actualValue,
-            finding: count + ' active HR skill definitions. Now Assist HRSD can perform competency-matched AI case assignment.'
-        };
+        return { status: "ready", actualValue: actualValue, finding: count + " active skill definitions. Now Assist HRSD can perform competency-matched AI case assignment." };
     } else if (count >= 3) {
-        return {
-            status: 'needs_attention',
-            actualValue: actualValue,
-            finding: 'Only ' + count + ' active HR skill definitions (target: 10+). Now Assist HRSD skill-based AI assignment will have limited matching coverage.'
-        };
+        return { status: "needs_attention", actualValue: actualValue, finding: "Only " + count + " active skill definitions (target: 10+). Now Assist HRSD skill-based AI assignment will have limited matching coverage." };
     } else {
-        return {
-            status: 'not_ready',
-            actualValue: actualValue,
-            finding: 'Fewer than 3 active HR skill definitions. Now Assist HRSD AI case assignment defaults to simple routing without skills data — competency-matched assignment is unavailable.'
-        };
+        return { status: "value_blocker", actualValue: actualValue, finding: "Fewer than 3 active skill definitions. Now Assist HRSD AI case assignment defaults to simple routing without skills data — competency-matched assignment is unavailable." };
     }
-}))();
+})();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001135: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005118: ' + e.message };
         }
     },
-    CHK0001125: function() {
+    CHK0005119: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var gaBR = new GlideAggregate('sys_script');
@@ -634,10 +583,10 @@ AROPCheckLibrary_HRSD.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001125: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005119: ' + e.message };
         }
     },
-    CHK0001126: function() {
+    CHK0005120: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var matched = {};
@@ -680,10 +629,10 @@ AROPCheckLibrary_HRSD.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001126: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005120: ' + e.message };
         }
     },
-    CHK0001127: function() {
+    CHK0005121: function() {
         try {
             return (function(){
 var gr=new GlideRecord("sys_cs_topic");
@@ -693,10 +642,10 @@ var n=gr.getRowCount();
 return{status:n>=10?"ready":"needs_attention",actualValue:n+" published active HR VA topics",finding:n<10?"Only "+n+" published HR VA topics. More active HR topics means broader Now Assist HRSD AI-assisted self-service coverage for employee HR inquiries.":""+n+" published HR VA topics -- good coverage for Now Assist HRSD conversational AI."};
 })();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001127: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005121: ' + e.message };
         }
     },
-    CHK0001128: function() {
+    CHK0005122: function() {
         try {
             return (function(){
 var gr=new GlideRecord("sn_hr_core_case");
@@ -706,10 +655,10 @@ var n=gr.getRowCount();
 return{status:n>=100?"ready":"needs_attention",actualValue:n+" HR cases with sentiment data",finding:n<100?"Only "+n+" HR cases have sentiment data. Now Assist HRSD uses sentiment for AI-driven empathetic responses and proactive escalation -- insufficient data limits this capability.":""+n+" HR cases with sentiment data -- Now Assist HRSD can leverage sentiment for empathetic AI responses."};
 })();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001128: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005122: ' + e.message };
         }
     },
-    CHK0001129: function() {
+    CHK0005123: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var ga = new GlideAggregate('task_rel_task');
@@ -741,10 +690,10 @@ return{status:n>=100?"ready":"needs_attention",actualValue:n+" HR cases with sen
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001129: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005123: ' + e.message };
         }
     },
-    CHK0001130: function() {
+    CHK0005124: function() {
         try {
             return (function(){
 var gr=new GlideRecord("sn_hr_core_case");
@@ -758,10 +707,10 @@ var pct=total>0?Math.round((n/total)*100):0;
 return{status:pct>=50?"ready":"needs_attention",actualValue:pct+"% of HR cases have confidentiality classification ("+n+" of "+total+")",finding:pct<50?"Only "+pct+"% of HR cases have confidentiality classification. Now Assist respects case confidentiality in AI summaries -- unclassified cases may expose sensitive HR data in AI outputs.":""+pct+"% of HR cases are confidentiality-classified -- Now Assist can apply appropriate data restrictions in AI outputs."};
 })();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001130: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005124: ' + e.message };
         }
     },
-    CHK0001131: function() {
+    CHK0005125: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var ga = new GlideAggregate('pa_job');
@@ -794,7 +743,7 @@ return{status:pct>=50?"ready":"needs_attention",actualValue:pct+"% of HR cases h
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001131: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005125: ' + e.message };
         }
     },
     type: 'AROPCheckLibrary_HRSD'
@@ -803,13 +752,13 @@ return{status:pct>=50?"ready":"needs_attention",actualValue:pct+"% of HR cases h
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2026-05-21 05:02:16</sys_created_on>
         <sys_id>7c82c6e0cfc5c3548935fb251d851ca5</sys_id>
-        <sys_mod_count>3</sys_mod_count>
+        <sys_mod_count>6</sys_mod_count>
         <sys_name>AROPCheckLibrary_HRSD</sys_name>
         <sys_package display_value="ServiceNow AI Readiness Optimization Platform" source="x_snc_airop">73e2562fcf244b908935fb251d851c78</sys_package>
         <sys_policy/>
         <sys_scope display_value="ServiceNow AI Readiness Optimization Platform">73e2562fcf244b908935fb251d851c78</sys_scope>
         <sys_update_name>sys_script_include_7c82c6e0cfc5c3548935fb251d851ca5</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2026-06-02 09:00:27</sys_updated_on>
+        <sys_updated_on>2026-06-08 16:10:53</sys_updated_on>
     </sys_script_include>
 </record_update>

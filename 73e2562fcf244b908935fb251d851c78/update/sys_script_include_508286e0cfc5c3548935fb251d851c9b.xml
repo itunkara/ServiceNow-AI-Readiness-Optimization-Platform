@@ -14,66 +14,48 @@ AROPCheckLibrary_CMDB.prototype = {
     initialize: function() {},
     _count: function(table, query) { var gr = new GlideRecord(table); if (query) gr.addEncodedQuery(query); gr.query(); return gr.getRowCount(); },
     _pct: function(num, den) { return den > 0 ? Math.round((num/den)*100) : 0; },
-    _daysAgo: function(field, days) { var d = new GlideDateTime(); d.addDaysUTC(-days); return field + '<' + d.getValue(); },
-    CHK0001013: function() {
+    CHK0005013: function() {
         try {
-            return ((function(checkDef, dateFilter) {
-    // Primary: CMDB Health Score table (populated when health jobs run)
-    var gr = new GlideRecord('cmdb_health_score');
-    gr.orderByDesc('sys_created_on');
+            return (function() {
+    var t = new GlideRecord("cmdb_health_scorecard");
+    if (!t.isValid()) {
+        return { status: "value_blocker", actualValue: "Required table cmdb_health_scorecard not found", finding: "CMDB Health Scorecard table is not available. Verify the CMDB Health plugin is active." };
+    }
+    var gr = new GlideRecord("cmdb_health_scorecard");
+    gr.orderByDesc("sys_created_on");
     gr.setLimit(1);
     gr.query();
-
     if (gr.next()) {
-        var score = parseFloat(gr.getValue('completeness_score') || 0);
-        var actualValue = 'CMDB Completeness Score: ' + score + '% (from health dashboard)';
-        if (score >= 80) {
-            return { status: 'ready', actualValue: actualValue,
-                finding: 'CMDB Completeness Score is ' + score + '%. Now Assist has sufficient CI attribute data for accurate AI impact analysis and recommendations.' };
-        } else if (score >= 60) {
-            return { status: 'needs_attention', actualValue: actualValue,
-                finding: 'CMDB Completeness Score is ' + score + '% (target: 80%+). Incomplete CI data will cause Now Assist to produce generic rather than environment-specific AI insights.' };
-        } else {
-            return { status: 'not_ready', actualValue: actualValue,
-                finding: 'CMDB Completeness Score is only ' + score + '%. Severely incomplete CI data means Now Assist cannot produce reliable AI insights — most context will be missing or inaccurate.' };
-        }
+        var score = parseFloat(gr.getValue("completeness_score") || 0);
+        var actualValue = "CMDB Completeness Score: " + score + "% (from health dashboard)";
+        if (score >= 80) return { status: "ready", actualValue: actualValue, finding: "CMDB Completeness Score is " + score + "%. Now Assist has sufficient CI attribute data for accurate AI impact analysis and recommendations." };
+        if (score >= 60) return { status: "needs_attention", actualValue: actualValue, finding: "CMDB Completeness Score is " + score + "% (target: 80%+). Incomplete CI data will cause Now Assist to produce generic rather than environment-specific AI insights." };
+        return { status: "value_blocker", actualValue: actualValue, finding: "CMDB Completeness Score is only " + score + "%. Severely incomplete CI data means Now Assist cannot produce reliable AI insights." };
     }
-
-    // Fallback proxy: server CI mandatory field population
-    var gaComplete = new GlideAggregate('cmdb_ci_server');
-    gaComplete.addQuery('install_status', 1);
-    gaComplete.addQuery('name', '!=', '');
-    gaComplete.addQuery('os_version', '!=', '');
-    gaComplete.addQuery('ip_address', '!=', '');
-    gaComplete.addAggregate('COUNT');
+    var gaComplete = new GlideAggregate("cmdb_ci_server");
+    gaComplete.addQuery("install_status", 1);
+    gaComplete.addQuery("name", "!=", "");
+    gaComplete.addQuery("os_version", "!=", "");
+    gaComplete.addQuery("ip_address", "!=", "");
+    gaComplete.addAggregate("COUNT");
     gaComplete.query();
-    var complete = gaComplete.next() ? parseInt(gaComplete.getAggregate('COUNT')) : 0;
-
-    var gaTotal = new GlideAggregate('cmdb_ci_server');
-    gaTotal.addQuery('install_status', 1);
-    gaTotal.addAggregate('COUNT');
+    var complete = gaComplete.next() ? parseInt(gaComplete.getAggregate("COUNT")) : 0;
+    var gaTotal = new GlideAggregate("cmdb_ci_server");
+    gaTotal.addQuery("install_status", 1);
+    gaTotal.addAggregate("COUNT");
     gaTotal.query();
-    var total = gaTotal.next() ? parseInt(gaTotal.getAggregate('COUNT')) : 0;
-
+    var total = gaTotal.next() ? parseInt(gaTotal.getAggregate("COUNT")) : 0;
     var pct = total > 0 ? Math.round((complete / total) * 100) : 0;
-    var actualValue = 'Proxy score: ' + pct + '% (' + complete + ' of ' + total + ' server CIs with mandatory fields populated). Enable CMDB Health jobs for official score.';
-
-    if (pct >= 80) {
-        return { status: 'ready', actualValue: actualValue,
-            finding: 'Proxy completeness score: ' + pct + '% of server CIs have mandatory fields populated. Enable CMDB Health jobs for an official completeness score across all CI classes.' };
-    } else if (pct >= 60) {
-        return { status: 'needs_attention', actualValue: actualValue,
-            finding: 'Proxy completeness score: only ' + pct + '% of server CIs have mandatory fields (target: 80%+). Enable CMDB Health jobs and address completeness gaps for Now Assist AI accuracy.' };
-    } else {
-        return { status: 'not_ready', actualValue: actualValue,
-            finding: 'Proxy completeness score: only ' + pct + '% of server CIs have mandatory fields. Critical CMDB completeness gap — Now Assist AI insights will be severely limited. Enable CMDB Health jobs immediately.' };
-    }
-}))();
+    var actualValue = "Proxy score: " + pct + "% (" + complete + " of " + total + " server CIs with mandatory fields). Enable CMDB Health jobs for official score.";
+    if (pct >= 80) return { status: "ready", actualValue: actualValue, finding: "Proxy completeness: " + pct + "% of server CIs have mandatory fields populated." };
+    if (pct >= 60) return { status: "needs_attention", actualValue: actualValue, finding: "Proxy completeness: only " + pct + "% of server CIs have mandatory fields (target: 80%+)." };
+    return { status: "value_blocker", actualValue: actualValue, finding: "Proxy completeness: only " + pct + "% of server CIs have mandatory fields. Critical CMDB completeness gap." };
+})();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001013: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005013: ' + e.message };
         }
     },
-    CHK0001021: function() {
+    CHK0005014: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var gaComplete = new GlideAggregate('cmdb_ci_server');
@@ -111,10 +93,10 @@ AROPCheckLibrary_CMDB.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001021: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005014: ' + e.message };
         }
     },
-    CHK0001025: function() {
+    CHK0005015: function() {
         try {
             return ((function(checkDef, dateFilter) {
     // Use separate queries to avoid OR precedence issues with multiple LIKE clauses
@@ -156,10 +138,10 @@ AROPCheckLibrary_CMDB.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001025: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005015: ' + e.message };
         }
     },
-    CHK0001029: function() {
+    CHK0005016: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var gaOwned = new GlideAggregate('cmdb_ci');
@@ -195,10 +177,10 @@ AROPCheckLibrary_CMDB.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001029: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005016: ' + e.message };
         }
     },
-    CHK0001015: function() {
+    CHK0005017: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var gaUnknown = new GlideAggregate('cmdb_ci');
@@ -234,69 +216,51 @@ AROPCheckLibrary_CMDB.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001015: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005017: ' + e.message };
         }
     },
-    CHK0001018: function() {
+    CHK0005018: function() {
         try {
-            return ((function(checkDef, dateFilter) {
-    // Primary: CMDB Health Score table
-    var gr = new GlideRecord('cmdb_health_score');
-    gr.orderByDesc('sys_created_on');
+            return (function() {
+    var t = new GlideRecord("cmdb_health_scorecard");
+    if (!t.isValid()) {
+        return { status: "value_blocker", actualValue: "Required table cmdb_health_scorecard not found", finding: "CMDB Health Scorecard table is not available. Verify the CMDB Health plugin is active." };
+    }
+    var gr = new GlideRecord("cmdb_health_scorecard");
+    gr.orderByDesc("sys_created_on");
     gr.setLimit(1);
     gr.query();
-
     if (gr.next()) {
-        var score = parseFloat(gr.getValue('correctness_score') || 0);
-        var actualValue = 'CMDB Correctness Score: ' + score + '%';
-        if (score >= 75) {
-            return { status: 'ready', actualValue: actualValue,
-                finding: 'CMDB Correctness Score is ' + score + '%. CI data is current and accurate — Now Assist AI recommendations will reflect the actual state of infrastructure.' };
-        } else if (score >= 50) {
-            return { status: 'needs_attention', actualValue: actualValue,
-                finding: 'CMDB Correctness Score is ' + score + '% (target: 75%+). Incorrect CI data will cause Now Assist to recommend remediations based on outdated or inaccurate infrastructure state.' };
-        } else {
-            return { status: 'not_ready', actualValue: actualValue,
-                finding: 'CMDB Correctness Score is only ' + score + '%. Critical correctness gap — Now Assist AI recommendations are unreliable when the majority of CI data is incorrect or stale.' };
-        }
+        var score = parseFloat(gr.getValue("correctness_score") || 0);
+        var actualValue = "CMDB Correctness Score: " + score + "%";
+        if (score >= 75) return { status: "ready", actualValue: actualValue, finding: "CMDB Correctness Score is " + score + "%. CI data is current and accurate — Now Assist AI recommendations will reflect the actual state of infrastructure." };
+        if (score >= 50) return { status: "needs_attention", actualValue: actualValue, finding: "CMDB Correctness Score is " + score + "% (target: 75%+). Incorrect CI data will cause Now Assist to recommend remediations based on outdated infrastructure state." };
+        return { status: "value_blocker", actualValue: actualValue, finding: "CMDB Correctness Score is only " + score + "%. Critical correctness gap — Now Assist AI recommendations are unreliable when the majority of CI data is incorrect or stale." };
     }
-
-    // Fallback proxy: % of CIs updated in last 90 days
     var cutoff = new GlideDateTime();
     cutoff.addDaysUTC(-90);
-
-    var gaFresh = new GlideAggregate('cmdb_ci');
-    gaFresh.addQuery('install_status', 1);
-    gaFresh.addQuery('sys_updated_on', '>=', cutoff.getValue());
-    gaFresh.addAggregate('COUNT');
+    var gaFresh = new GlideAggregate("cmdb_ci");
+    gaFresh.addQuery("install_status", 1);
+    gaFresh.addQuery("sys_updated_on", ">=", cutoff.getValue());
+    gaFresh.addAggregate("COUNT");
     gaFresh.query();
-    var fresh = gaFresh.next() ? parseInt(gaFresh.getAggregate('COUNT')) : 0;
-
-    var gaTotal = new GlideAggregate('cmdb_ci');
-    gaTotal.addQuery('install_status', 1);
-    gaTotal.addAggregate('COUNT');
+    var fresh = gaFresh.next() ? parseInt(gaFresh.getAggregate("COUNT")) : 0;
+    var gaTotal = new GlideAggregate("cmdb_ci");
+    gaTotal.addQuery("install_status", 1);
+    gaTotal.addAggregate("COUNT");
     gaTotal.query();
-    var total = gaTotal.next() ? parseInt(gaTotal.getAggregate('COUNT')) : 0;
-
+    var total = gaTotal.next() ? parseInt(gaTotal.getAggregate("COUNT")) : 0;
     var pct = total > 0 ? Math.round((fresh / total) * 100) : 0;
-    var actualValue = 'Proxy correctness: ' + pct + '% of CIs updated in last 90 days (' + fresh + ' of ' + total + '). Enable CMDB Health jobs for official score.';
-
-    if (pct >= 75) {
-        return { status: 'ready', actualValue: actualValue,
-            finding: 'Proxy correctness: ' + pct + '% of CIs updated in last 90 days. Enable CMDB Health jobs for an official correctness score.' };
-    } else if (pct >= 50) {
-        return { status: 'needs_attention', actualValue: actualValue,
-            finding: 'Proxy correctness: only ' + pct + '% of CIs updated in last 90 days (target: 75%+). Many CIs may be stale — enable CMDB Health jobs and address correctness gaps.' };
-    } else {
-        return { status: 'not_ready', actualValue: actualValue,
-            finding: 'Proxy correctness: only ' + pct + '% of CIs updated in last 90 days. Most CI data is likely stale — Now Assist AI recommendations based on this CMDB will be unreliable.' };
-    }
-}))();
+    var actualValue = "Proxy correctness: " + pct + "% of CIs updated in last 90 days (" + fresh + " of " + total + "). Enable CMDB Health jobs for official score.";
+    if (pct >= 75) return { status: "ready", actualValue: actualValue, finding: "Proxy correctness: " + pct + "% of CIs updated in last 90 days." };
+    if (pct >= 50) return { status: "needs_attention", actualValue: actualValue, finding: "Proxy correctness: only " + pct + "% of CIs updated in last 90 days (target: 75%+)." };
+    return { status: "value_blocker", actualValue: actualValue, finding: "Proxy correctness: only " + pct + "% of CIs updated in last 90 days. Most CI data is likely stale." };
+})();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001018: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005018: ' + e.message };
         }
     },
-    CHK0001027: function() {
+    CHK0005019: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var cutoff = new GlideDateTime();
@@ -335,10 +299,10 @@ AROPCheckLibrary_CMDB.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001027: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005019: ' + e.message };
         }
     },
-    CHK0001031: function() {
+    CHK0005020: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var cutoff = new GlideDateTime();
@@ -377,10 +341,10 @@ AROPCheckLibrary_CMDB.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001031: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005020: ' + e.message };
         }
     },
-    CHK0001016: function() {
+    CHK0005021: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var gaAuth = new GlideAggregate('cmdb_ci');
@@ -417,10 +381,10 @@ AROPCheckLibrary_CMDB.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001016: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005021: ' + e.message };
         }
     },
-    CHK0001019: function() {
+    CHK0005022: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var testGr = new GlideRecord('reconcile_duplicate_task');
@@ -454,10 +418,10 @@ AROPCheckLibrary_CMDB.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001019: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005022: ' + e.message };
         }
     },
-    CHK0001023: function() {
+    CHK0005023: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var gaRels = new GlideAggregate('cmdb_rel_ci');
@@ -491,10 +455,10 @@ AROPCheckLibrary_CMDB.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001023: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005023: ' + e.message };
         }
     },
-    CHK0001032: function() {
+    CHK0005024: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var gaTypes = new GlideAggregate('cmdb_rel_type');
@@ -528,10 +492,10 @@ AROPCheckLibrary_CMDB.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001032: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005024: ' + e.message };
         }
     },
-    CHK0001017: function() {
+    CHK0005025: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var ga = new GlideAggregate('cmdb_rel_ci');
@@ -557,10 +521,10 @@ AROPCheckLibrary_CMDB.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001017: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005025: ' + e.message };
         }
     },
-    CHK0001020: function() {
+    CHK0005026: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var gaTotal = new GlideAggregate('cmdb_ci_appl');
@@ -596,10 +560,10 @@ AROPCheckLibrary_CMDB.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001020: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005026: ' + e.message };
         }
     },
-    CHK0001024: function() {
+    CHK0005027: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var gaBizApps = new GlideAggregate('cmdb_ci_business_app');
@@ -626,10 +590,10 @@ AROPCheckLibrary_CMDB.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001024: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005027: ' + e.message };
         }
     },
-    CHK0001028: function() {
+    CHK0005028: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var ga = new GlideAggregate('cmdb_ci');
@@ -656,10 +620,10 @@ AROPCheckLibrary_CMDB.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001028: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005028: ' + e.message };
         }
     },
-    CHK0001014: function() {
+    CHK0005029: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var ga = new GlideAggregate('cmdb_identifier');
@@ -682,10 +646,10 @@ AROPCheckLibrary_CMDB.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001014: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005029: ' + e.message };
         }
     },
-    CHK0001022: function() {
+    CHK0005030: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var healthJobs = { completeness: false, correctness: false, compliance: false };
@@ -727,10 +691,10 @@ AROPCheckLibrary_CMDB.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001022: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005030: ' + e.message };
         }
     },
-    CHK0001026: function() {
+    CHK0005031: function() {
         try {
             return ((function(checkDef, dateFilter) {
     // Use separate queries to avoid OR precedence issues
@@ -769,29 +733,26 @@ AROPCheckLibrary_CMDB.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001026: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005031: ' + e.message };
         }
     },
-    CHK0001030: function() {
+    CHK0005032: function() {
         try {
-            return ((function(checkDef, dateFilter) {
-    var ga = new GlideAggregate('cmdb_health_score');
-    ga.addAggregate('COUNT');
-    ga.query();
-    var scores = ga.next() ? parseInt(ga.getAggregate('COUNT')) : 0;
-
-    var actualValue = scores + ' cmdb_health_score records (0 = health jobs have never run successfully)';
-
-    if (scores > 0) {
-        return { status: 'ready', actualValue: actualValue,
-            finding: scores + ' CMDB health score records found. CMDB Health Workspace is configured and health jobs have run — official completeness and correctness scores are available.' };
-    } else {
-        return { status: 'not_ready', actualValue: actualValue,
-            finding: 'No CMDB health score records found. CMDB Health Workspace has never run successfully — official health scores are unavailable. CHK0002210 and CHK0002215 are using proxy metrics instead.' };
+            return (function() {
+    var t = new GlideRecord("cmdb_health_scorecard");
+    if (!t.isValid()) {
+        return { status: "value_blocker", actualValue: "Required table cmdb_health_scorecard not found", finding: "CMDB Health Scorecard table is not available. Verify the CMDB Health plugin is active." };
     }
-}))();
+    var ga = new GlideAggregate("cmdb_health_scorecard");
+    ga.addAggregate("COUNT");
+    ga.query();
+    var scores = ga.next() ? parseInt(ga.getAggregate("COUNT")) : 0;
+    var actualValue = scores + " cmdb_health_scorecard records (0 = health jobs have never run successfully)";
+    if (scores > 0) return { status: "ready", actualValue: actualValue, finding: scores + " CMDB health scorecard records found. CMDB Health Workspace is configured and health jobs have run — official completeness and correctness scores are available." };
+    return { status: "value_blocker", actualValue: actualValue, finding: "No CMDB health scorecard records found. CMDB Health Workspace has never run successfully — official health scores are unavailable. Proxy metrics are being used instead." };
+})();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001030: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005032: ' + e.message };
         }
     },
     type: 'AROPCheckLibrary_CMDB'
@@ -800,13 +761,13 @@ AROPCheckLibrary_CMDB.prototype = {
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2026-05-21 05:02:14</sys_created_on>
         <sys_id>508286e0cfc5c3548935fb251d851c9b</sys_id>
-        <sys_mod_count>1</sys_mod_count>
+        <sys_mod_count>4</sys_mod_count>
         <sys_name>AROPCheckLibrary_CMDB</sys_name>
         <sys_package display_value="ServiceNow AI Readiness Optimization Platform" source="x_snc_airop">73e2562fcf244b908935fb251d851c78</sys_package>
         <sys_policy/>
         <sys_scope display_value="ServiceNow AI Readiness Optimization Platform">73e2562fcf244b908935fb251d851c78</sys_scope>
         <sys_update_name>sys_script_include_508286e0cfc5c3548935fb251d851c9b</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2026-06-02 09:00:27</sys_updated_on>
+        <sys_updated_on>2026-06-08 16:10:53</sys_updated_on>
     </sys_script_include>
 </record_update>

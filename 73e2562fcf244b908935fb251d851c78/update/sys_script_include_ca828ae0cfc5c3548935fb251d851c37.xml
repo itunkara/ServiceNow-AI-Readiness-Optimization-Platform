@@ -14,8 +14,7 @@ AROPCheckLibrary_CSM.prototype = {
     initialize: function() {},
     _count: function(table, query) { var gr = new GlideRecord(table); if (query) gr.addEncodedQuery(query); gr.query(); return gr.getRowCount(); },
     _pct: function(num, den) { return den > 0 ? Math.round((num/den)*100) : 0; },
-    _daysAgo: function(field, days) { var d = new GlideDateTime(); d.addDaysUTC(-days); return field + '<' + d.getValue(); },
-    CHK0001055: function() {
+    CHK0005043: function() {
         try {
             return (function(checkDef, dateFilter) {
     var checkPlugin = (function checkPlugin(storeScope, pluginSource) {    var result = { found: false, version: "", table: "" };    try {        var saGR = new GlideRecord("sys_store_app");        saGR.addQuery("scope", storeScope);        saGR.setLimit(1);        saGR.query();        if (saGR.next()) {            result.found = true;            result.version = saGR.getValue("version") || "";            result.table = "sys_store_app";            return result;        }    } catch(e1) {}    if (pluginSource) {        try {            var spGR = new GlideRecord("sys_plugins");            spGR.addQuery("source", pluginSource);            spGR.addQuery("active", true);            spGR.setLimit(1);            spGR.query();            if (spGR.next()) {                result.found = true;                result.version = spGR.getValue("version") || "";                result.table = "sys_plugins";                return result;            }        } catch(e2) {}    }    return result;});
@@ -35,15 +34,15 @@ AROPCheckLibrary_CSM.prototype = {
     }
 })();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001055: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005043: ' + e.message };
         }
     },
-    CHK0001056: function() {
+    CHK0005044: function() {
         try {
             return ((function(checkDef, dateFilter) {
     // sn_customerservice_case.state is INTEGER: 3=Closed, 6=Resolved
     var cutoff = new GlideDateTime();
-    cutoff.addYears(-1);
+    cutoff.addYearsUTC(-1);
 
     var gaTotal = new GlideAggregate('sn_customerservice_case');
     gaTotal.addQuery('state', 'IN', '3,6');
@@ -92,14 +91,14 @@ AROPCheckLibrary_CSM.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001056: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005044: ' + e.message };
         }
     },
-    CHK0001051: function() {
+    CHK0005045: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var cutoff = new GlideDateTime();
-    cutoff.addYears(-1);
+    cutoff.addYearsUTC(-1);
 
     var ga = new GlideAggregate('sn_customerservice_case');
     ga.addQuery('sys_created_on', '>=', cutoff.getValue());
@@ -130,14 +129,14 @@ AROPCheckLibrary_CSM.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001051: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005045: ' + e.message };
         }
     },
-    CHK0001052: function() {
+    CHK0005046: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var cutoff = new GlideDateTime();
-    cutoff.addYears(-1);
+    cutoff.addYearsUTC(-1);
 
     var gaTotal = new GlideAggregate('sn_customerservice_case');
     gaTotal.addQuery('state', 'IN', '3,6');
@@ -187,10 +186,10 @@ AROPCheckLibrary_CSM.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001052: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005046: ' + e.message };
         }
     },
-    CHK0001053: function() {
+    CHK0005047: function() {
         try {
             return ((function(checkDef, dateFilter) {
     // Check all published active KB articles — Now Assist CSM AI Search
@@ -225,10 +224,10 @@ AROPCheckLibrary_CSM.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001053: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005047: ' + e.message };
         }
     },
-    CHK0001054: function() {
+    CHK0005048: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var ga = new GlideAggregate('sla');
@@ -261,10 +260,10 @@ AROPCheckLibrary_CSM.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001054: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005048: ' + e.message };
         }
     },
-    CHK0001043: function() {
+    CHK0005049: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var ga = new GlideAggregate('sys_plugins');
@@ -289,10 +288,10 @@ AROPCheckLibrary_CSM.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001043: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005049: ' + e.message };
         }
     },
-    CHK0001044: function() {
+    CHK0005050: function() {
         try {
             return ((function(checkDef, dateFilter) {
     // Check for any active Service Portal — CSM portal naming varies by org
@@ -320,14 +319,14 @@ AROPCheckLibrary_CSM.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001044: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005050: ' + e.message };
         }
     },
-    CHK0001045: function() {
+    CHK0005051: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var cutoff = new GlideDateTime();
-    cutoff.addYears(-1);
+    cutoff.addYearsUTC(-1);
 
     var gaTotal = new GlideAggregate('sn_customerservice_case');
     gaTotal.addQuery('state', 'IN', '3,6');
@@ -376,10 +375,10 @@ AROPCheckLibrary_CSM.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001045: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005051: ' + e.message };
         }
     },
-    CHK0001046: function() {
+    CHK0005052: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var ga = new GlideAggregate('sn_customerservice_entitlement_contract');
@@ -411,14 +410,14 @@ AROPCheckLibrary_CSM.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001046: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005052: ' + e.message };
         }
     },
-    CHK0001047: function() {
+    CHK0005053: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var cutoff = new GlideDateTime();
-    cutoff.addYears(-1);
+    cutoff.addYearsUTC(-1);
 
     var gaTotal = new GlideAggregate('sn_customerservice_case');
     gaTotal.addQuery('state', 'IN', '3,6');
@@ -467,10 +466,10 @@ AROPCheckLibrary_CSM.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001047: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005053: ' + e.message };
         }
     },
-    CHK0001048: function() {
+    CHK0005054: function() {
         try {
             return ((function(checkDef, dateFilter) {
     // sys_cs_live_agent_setup records only exist when omnichannel/chat
@@ -498,14 +497,14 @@ AROPCheckLibrary_CSM.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001048: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005054: ' + e.message };
         }
     },
-    CHK0001049: function() {
+    CHK0005055: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var cutoff = new GlideDateTime();
-    cutoff.addYears(-1);
+    cutoff.addYearsUTC(-1);
 
     // Collect distinct assignment groups used on CSM cases in last 12 months
     var usedGroups = {};
@@ -562,14 +561,14 @@ AROPCheckLibrary_CSM.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001049: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005055: ' + e.message };
         }
     },
-    CHK0001050: function() {
+    CHK0005056: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var cutoff = new GlideDateTime();
-    cutoff.addYears(-1);
+    cutoff.addYearsUTC(-1);
 
     var gaTotal = new GlideAggregate('sn_customerservice_case');
     gaTotal.addQuery('state', 'IN', '3,6');
@@ -618,10 +617,10 @@ AROPCheckLibrary_CSM.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001050: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005056: ' + e.message };
         }
     },
-    CHK0001057: function() {
+    CHK0005057: function() {
         try {
             return ((function(checkDef, dateFilter) {
     var gaBR = new GlideAggregate('sys_script');
@@ -664,7 +663,7 @@ AROPCheckLibrary_CSM.prototype = {
     }
 }))();
         } catch(e) {
-            return { status: 'needs_attention', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0001057: ' + e.message };
+            return { status: 'needs_validation', actualValue: 'Script error: ' + e.message, finding: 'Error in CHK0005057: ' + e.message };
         }
     },
     type: 'AROPCheckLibrary_CSM'
@@ -673,13 +672,13 @@ AROPCheckLibrary_CSM.prototype = {
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2026-05-21 05:02:21</sys_created_on>
         <sys_id>ca828ae0cfc5c3548935fb251d851c37</sys_id>
-        <sys_mod_count>3</sys_mod_count>
+        <sys_mod_count>6</sys_mod_count>
         <sys_name>AROPCheckLibrary_CSM</sys_name>
         <sys_package display_value="ServiceNow AI Readiness Optimization Platform" source="x_snc_airop">73e2562fcf244b908935fb251d851c78</sys_package>
         <sys_policy/>
         <sys_scope display_value="ServiceNow AI Readiness Optimization Platform">73e2562fcf244b908935fb251d851c78</sys_scope>
         <sys_update_name>sys_script_include_ca828ae0cfc5c3548935fb251d851c37</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2026-06-02 09:00:27</sys_updated_on>
+        <sys_updated_on>2026-06-08 16:10:53</sys_updated_on>
     </sys_script_include>
 </record_update>
