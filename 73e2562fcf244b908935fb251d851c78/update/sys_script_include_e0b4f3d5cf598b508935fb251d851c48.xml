@@ -21,7 +21,7 @@ AROPInstaller.prototype = {
             this._setupRestrictedCallerAccess(log);
             this._setupServiceAccount(log);
             this._flushCache(log);
-            this._seedChecks(log);
+            this._seedChecksIfEmpty(log);
             this._rebuildLibraries(log);
             this._setActivatedFlag(log);
             log.push('=== AROPInstaller: complete ===');
@@ -36,21 +36,18 @@ AROPInstaller.prototype = {
 
     _setupPrivileges: function(log) {
         log.push('--- Setting up sys_scope_privilege records ---');
-
         var AIROP_SCOPE = '73e2562fcf244b908935fb251d851c78';
-
         var privileges = [
             'sn_hr_core_coe',
             'sn_lg_ops_request',
             'sn_lg_matter_matter'
         ];
-
         var created = 0;
+        var fixed = 0;
         var skipped = 0;
 
         for (var i = 0; i < privileges.length; i++) {
             var tableName = privileges[i];
-
             var check = new GlideRecord('sys_scope_privilege');
             check.addQuery('source_scope', AIROP_SCOPE);
             check.addQuery('target_name', tableName);
@@ -59,28 +56,32 @@ AROPInstaller.prototype = {
             check.query();
 
             if (check.next()) {
-                skipped++;
-                continue;
-            }
-
-            var gr = new GlideRecord('sys_scope_privilege');
-            gr.initialize();
-            gr.setValue('source_scope', AIROP_SCOPE);
-            gr.setValue('target_name', tableName);
-            gr.setValue('operation', 'read');
-            gr.setValue('status', 'allowed');
-            gr.setWorkflow(false);
-            var sysId = gr.insert();
-
-            if (sysId) {
-                created++;
-                log.push('Privilege created: ' + tableName);
+                if (check.getValue('status') !== 'allowed') {
+                    check.setValue('status', 'allowed');
+                    check.setWorkflow(false);
+                    check.update();
+                    fixed++;
+                    log.push('Fixed privilege: ' + tableName);
+                } else {
+                    skipped++;
+                }
             } else {
-                log.push('Privilege FAILED: ' + tableName);
+                var gr = new GlideRecord('sys_scope_privilege');
+                gr.initialize();
+                gr.setValue('source_scope', AIROP_SCOPE);
+                gr.setValue('target_name', tableName);
+                gr.setValue('operation', 'read');
+                gr.setValue('status', 'allowed');
+                gr.setWorkflow(false);
+                if (gr.insert()) {
+                    created++;
+                    log.push('Created privilege: ' + tableName);
+                } else {
+                    log.push('FAILED privilege: ' + tableName);
+                }
             }
         }
-
-        log.push('sys_scope_privilege: created=' + created + ', skipped=' + skipped);
+        log.push('sys_scope_privilege: created=' + created + ', fixed=' + fixed + ', skipped=' + skipped);
     },
 
     _setupRestrictedCallerAccess: function(log) {
@@ -156,20 +157,33 @@ AROPInstaller.prototype = {
     _flushCache: function(log) {
         log.push('--- Flushing cache ---');
         try { GlideCacheManager.flush(); log.push('Cache flushed'); }
-        catch(e) { log.push('Cache flush note: navigate to cache.do manually. ' + e.message); }
+        catch(e) { log.push('Cache flush note: ' + e.message); }
     },
 
-    _seedChecks: function(log) {
-        log.push('--- Seeding checks (AROPCheckSeeder) ---');
+    _seedChecksIfEmpty: function(log) {
+        log.push('--- Checking if seeding required ---');
+        var count = new GlideAggregate('x_snc_airop_check_definition');
+        count.addAggregate('COUNT');
+        count.query();
+        var existing = count.next() ? parseInt(count.getAggregate('COUNT')) : 0;
+
+        if (existing > 0) {
+            log.push('Skipping seed: ' + existing + ' check definitions already exist');
+            return;
+        }
+
+        log.push('No checks found — seeding defaults');
         try {
             var seeder = new AROPCheckSeeder();
             var r = seeder.seed();
             log.push('Seeder: inserted=' + r.inserted + ', failed=' + r.failed + ', total=' + r.total);
-        } catch(e) { log.push('Seeder ERROR: ' + e.message); }
+        } catch(e) {
+            log.push('Seeder ERROR: ' + e.message);
+        }
     },
 
     _rebuildLibraries: function(log) {
-        log.push('--- Rebuilding check libraries (AROPAdminAjax) ---');
+        log.push('--- Rebuilding check libraries ---');
         try {
             var admin = new AROPAdminAjax();
             admin.rebuildAllLibraries();
@@ -191,13 +205,13 @@ AROPInstaller.prototype = {
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2026-06-05 07:32:17</sys_created_on>
         <sys_id>e0b4f3d5cf598b508935fb251d851c48</sys_id>
-        <sys_mod_count>1</sys_mod_count>
+        <sys_mod_count>2</sys_mod_count>
         <sys_name>AROPInstaller</sys_name>
         <sys_package display_value="ServiceNow AI Readiness Optimization Platform" source="x_snc_airop">73e2562fcf244b908935fb251d851c78</sys_package>
         <sys_policy/>
         <sys_scope display_value="ServiceNow AI Readiness Optimization Platform">73e2562fcf244b908935fb251d851c78</sys_scope>
         <sys_update_name>sys_script_include_e0b4f3d5cf598b508935fb251d851c48</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2026-06-08 17:04:45</sys_updated_on>
+        <sys_updated_on>2026-06-08 22:55:07</sys_updated_on>
     </sys_script_include>
 </record_update>
