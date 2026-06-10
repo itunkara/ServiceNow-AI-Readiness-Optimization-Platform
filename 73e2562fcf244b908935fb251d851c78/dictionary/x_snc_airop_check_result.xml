@@ -2,7 +2,6 @@
     <element attributes="all_tables.text_index_translations=true" db_object_id="e03b13a3cfe00f908935fb251d851c2b" label="Check Result" max_length="40" name="x_snc_airop_check_result" type="collection">
         <element label="Finding" max_length="1000" name="finding" type="string"/>
         <element attributes="rows=4" label="Actual Value" max_length="1000" name="actual_value" type="string"/>
-        <element label="Check Definition" max_length="32" name="check_definition" read_only="true" reference="x_snc_airop_check_definition" type="reference"/>
         <element attributes="edge_encryption_enabled=true" default="javascript:global.getNextObjNumberPadded();" label="Number" max_length="40" name="number" read_only="true" type="string"/>
         <element choice="1" label="Module" mandatory="true" max_length="40" name="module" read_only="true" type="choice">
             <choice>
@@ -44,6 +43,7 @@
                 <element inactive_on_update="false" label="Ready" sequence="100" value="ready"/>
             </choice>
         </element>
+        <element label="Check Definition" mandatory="true" max_length="32" name="check_definition" reference="x_snc_airop_check_definition" type="reference"/>
         <element attributes="serializer=com.glide.script.TranslatedTextXMLSerializer" label="Remediation Guidance" max_length="4000" name="remediation_guidance" type="translated_text"/>
         <element label="Assessment Run" mandatory="true" max_length="32" name="assessment_run" read_only="true" reference="x_snc_airop_assessment_run" type="reference"/>
         <index name="index">
