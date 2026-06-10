@@ -13,7 +13,6 @@
             </choice>
         </element>
         <element label="Checks Executed" max_length="40" name="checks_executed" type="integer"/>
-        <element label="Integration Readiness %" max_length="40" name="integration_score" type="integer"/>
         <element label="Platform Readiness %" max_length="40" name="platform_score" type="integer"/>
         <element label="ITSM Readiness %" max_length="40" name="itsm_score" type="integer"/>
         <element choice="1" label="Environment Type" max_length="40" name="environment_type" type="choice">
@@ -31,7 +30,7 @@
         </element>
         <element label="Name" mandatory="true" max_length="255" name="name" type="string"/>
         <element label="GRC Readiness %" max_length="40" name="grc_score" type="integer"/>
-        <element default="0" label="SECOPS Readiness %" max_length="20" name="secops_score" read_only="true" type="decimal"/>
+        <element label="SECOPS Readiness %" max_length="20" name="secops_score" read_only="true" type="decimal"/>
         <element label="DEX Readiness %" max_length="40" name="dex_score" type="integer"/>
         <element label="HRSD Readiness %" max_length="40" name="hrsd_score" type="integer"/>
         <element label="Creator Readiness %" max_length="40" name="creator_score" type="integer"/>
@@ -47,10 +46,9 @@
         <element label="Modules Scanned" max_length="500" name="modules_scanned" type="string"/>
         <element label="Total Checks" max_length="40" name="total_checks" type="integer"/>
         <element label="SPM Readiness %" max_length="40" name="spm_score" type="integer"/>
-        <element label="Employee Center Readiness %" max_length="40" name="employee_center_score" type="integer"/>
         <element label="SAM Readiness %" max_length="40" name="sam_score" type="integer"/>
         <element label="TPRM Readiness %" max_length="40" name="tprm_score" type="integer"/>
-        <element default="0" label="AIOPS Readiness %" max_length="38" name="aiops_score" read_only="true" type="decimal"/>
+        <element label="AIOPS Readiness %" max_length="38" name="aiops_score" read_only="true" type="decimal"/>
         <element attributes="rows=6" label="Notes" max_length="4000" name="notes" type="string"/>
         <element label="SPO Readiness %" max_length="40" name="spo_score" type="integer"/>
         <element label="HAM Readiness %" max_length="40" name="ham_score" type="integer"/>

@@ -16,7 +16,7 @@
         <column_label>SECOPS Readiness %</column_label>
         <comments/>
         <create_roles/>
-        <default_value>0</default_value>
+        <default_value/>
         <defaultsort/>
         <delete_roles/>
         <dependent/>
@@ -58,7 +58,7 @@
         <sys_scope display_value="ServiceNow AI Readiness Optimization Platform">73e2562fcf244b908935fb251d851c78</sys_scope>
         <sys_update_name>sys_dictionary_x_snc_airop_assessment_run_secops_score</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2026-05-23 16:38:35</sys_updated_on>
+        <sys_updated_on>2026-06-10 13:37:07</sys_updated_on>
         <table_reference>false</table_reference>
         <text_index>false</text_index>
         <unique>false</unique>
